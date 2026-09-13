@@ -15,7 +15,7 @@ public class Team4602AutoEncoderBased extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        robot.create(hardwareMap);
+        robot.Map(hardwareMap);
 
         telemetry.update();
         waitForStart();

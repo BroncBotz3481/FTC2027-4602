@@ -75,7 +75,7 @@ public class Team4602RedAutoOne extends OpMode {
         follower.update();
         Scheduler.execute();
 
-        
+
     }
 
     @Override

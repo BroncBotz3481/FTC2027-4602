@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 public class SyntaxLesson extends LinearOpMode {
-    Team4008HM2025 robot = new Team4008HM2025();
+    Team4602HM2025 robot = new Team4602HM2025();
 
     @Override
     public void runOpMode() {

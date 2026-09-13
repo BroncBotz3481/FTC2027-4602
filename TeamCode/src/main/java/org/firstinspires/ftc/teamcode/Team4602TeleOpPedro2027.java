@@ -15,12 +15,6 @@ import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
 @TeleOp(name = "Team4602TeleOpPedro2027", group = "4602")
 public class Team4602TeleOpPedro2027 {
     private Follower follower;
-    DrivePowers powers = ManualDrive.fieldCentric(
-            -gamepad1.left_stick_y,
-            gamepad1.left_stick_x,
-            gamepad1.right_stick_x,
-            follower.pose().heading()
-    );
     @Override
     public void init() {
         follower = PedroConstants.create(hardwareMap);
