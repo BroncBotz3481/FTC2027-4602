@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import ftc.teamcode.Constants.AutoTimeBasedConstants;
 
-@Autonomous (name=AutoName, group=group)
-public class Team4008AutoTimeBased extends LinearOpMode {
+@Autonomous (name="Team4602AutoTimeBased", group="4602")
+public class Team4602AutoTimeBased extends LinearOpMode {
 
-    Team4008HM2025 robot = new Team4008HM2025();
+    Team4602HM2025 robot = new Team4602HM2025();
     ElapsedTime Time = new ElapsedTime();
 
     @Override

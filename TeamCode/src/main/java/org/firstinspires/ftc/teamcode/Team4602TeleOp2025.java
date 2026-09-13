@@ -1,14 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.pedropathing.drivetrain.DrivePowers;
+import com.pedropathing.follower.ManualDrive;
 
-@TeleOp(name = "Team4008TeleOp2025", group = "4008")
-public class Team4008TeleOp2025 extends LinearOpMode {
-    Team4008HM2025 robot = new Team4008HM2025();
+import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
+import com.pedropathing.drivetrain.DrivePowers;
+import com.pedropathing.follower.ManualDrive;
 
-    @Override
+@TeleOp (name = "Team4602TeleOp2027", group = "4602")
+public class Team4602TeleOp2025 extends LinearOpMode {
+    Team4602HM2025 robot = new Team4602HM2025();
     public void runOpMode() {
         robot.Map(hardwareMap);
         telemetry.addData("Say", "TeleOp Starting");
