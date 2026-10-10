@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.math.Pose;
-import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
+//import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
 import static com.pedropathing.api.Paths.*;
 
 
@@ -23,64 +23,64 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
 //https://pedropathing.com/docs/ivy
-
+//
 @Autonomous (name="Team4602RedAutoOne2027", group="4602")
 public class Team4602RedAutoOne extends OpMode {
-    private Follower follower;
-    private final PoseFactory p = PoseFactory.degrees();
-
-    private final Pose startPose = p.of(24, 24, 0);
-    private final Pose park = p.of(48, 48, 90);
-    private final Pose controlPose = p.of(36, 60, 45);
-
-    private final Pose scorePose = p.of(36, 36, 0);
-    private Path park() {
-        return line(startPose, park).linear(startPose, park);
-        // return curve(startPose, controlPose, park).linear(startPose, park);
-        // https://pedropathing.com/docs/pathing/reference/api gives the rest of the paths you can make
-        // https://pedropathing.com/docs/pathing/reference/interpolation interpolation on paths
-        // https://visualizer.pedropathing.com/
-    }
-
-    private Path startToScore() {
-        return line(startPose, scorePose).linear(startPose, scorePose);
-    }
-    private Path parking(){
-        return line(scorePose, park).linear(scorePose, park);
-    }
-    private Command autoRoutine() {
-        return sequential(
-                follow(follower, startToScore()),
-                // Add mechanism commands here.
-                follow(follower, parking())
-        );
-    }
-
+//    private Follower follower;
+//    private final PoseFactory p = PoseFactory.degrees();
+//
+//    private final Pose startPose = p.of(24, 24, 0);
+//    private final Pose park = p.of(48, 48, 90);
+//    private final Pose controlPose = p.of(36, 60, 45);
+//
+//    private final Pose scorePose = p.of(36, 36, 0);
+//    private Path park() {
+//        return line(startPose, park).linear(startPose, park);
+//        // return curve(startPose, controlPose, park).linear(startPose, park);
+//        // https://pedropathing.com/docs/pathing/reference/api gives the rest of the paths you can make
+//        // https://pedropathing.com/docs/pathing/reference/interpolation interpolation on paths
+//        // https://visualizer.pedropathing.com/
+//    }
+//
+//    private Path startToScore() {
+//        return line(startPose, scorePose).linear(startPose, scorePose);
+//    }
+//    private Path parking(){
+//        return line(scorePose, park).linear(scorePose, park);
+//    }
+//    private Command autoRoutine() {
+//        return sequential(
+//                follow(follower, startToScore()),
+//                // Add mechanism commands here.
+//                follow(follower, parking())
+//        );
+//    }
+//
     @Override
     public void init() {
-        Scheduler.reset();
-        follower = PedroConstants.create(hardwareMap);
-        follower.setPose(startPose);
-        follower.update();
+//        Scheduler.reset();
+//        follower = PedroConstants.create(hardwareMap);
+//        follower.setPose(startPose);
+//        follower.update();
     }
-
+//
     @Override
     public void start() {
-        schedule(autoRoutine());
-        // using the same park path from the last page
+//        schedule(autoRoutine());
+//        // using the same park path from the last page
     }
-
+//
     @Override
     public void loop() {
-        follower.update();
-        Scheduler.execute();
-
-
+//        follower.update();
+//        Scheduler.execute();
+//
+//
     }
-
+//
     @Override
     public void stop() {
-        OpModeStorage.autonomousEndPose = follower.pose(); //saves your position in that file
+//        OpModeStorage.autonomousEndPose = follower.pose(); //saves your position in that file
     }
 
 }
