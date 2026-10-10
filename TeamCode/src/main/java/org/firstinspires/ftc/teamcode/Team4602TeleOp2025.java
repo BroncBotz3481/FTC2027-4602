@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.pedropathing.drivetrain.DrivePowers;
-import com.pedropathing.follower.ManualDrive;
-
-import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
-import com.pedropathing.drivetrain.DrivePowers;
-import com.pedropathing.follower.ManualDrive;
 
 @TeleOp (name = "Team4602TeleOp2027", group = "4602")
 public class Team4602TeleOp2025 extends LinearOpMode {
-    Team4602HM2025 robot = new Team4602HM2025();
+    Team4602HM2027 robot = new Team4602HM2027();
     public void runOpMode() {
         robot.Map(hardwareMap);
         telemetry.addData("Say", "TeleOp Starting");
@@ -72,8 +64,13 @@ public class Team4602TeleOp2025 extends LinearOpMode {
                 moveRight(mag);
             }
 
+            if (gamepad1.a){
+                robot.DriveLeftFront.setPower(0.5);
+            }
+
         }
     }
+
 
     // class specific method that aren't in constants file go here
     public void exampleMethod (double power){

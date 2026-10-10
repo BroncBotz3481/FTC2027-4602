@@ -9,11 +9,13 @@ import com.pedropathing.follower.ManualDrive;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
 @TeleOp(name = "Team4602TeleOpPedro2027", group = "4602")
-public class Team4602TeleOpPedro2027 {
+public class Team4602TeleOpPedro2027 extends OpMode {
     private Follower follower;
     @Override
     public void init() {

@@ -4,12 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.pedro.PedroConstants;
 
 @Autonomous (name="Team4008AutoEncoderBased", group="4008")
 public class Team4602AutoEncoderBased extends LinearOpMode {
 
-    Team4602HM2025 robot = new Team4602HM2025();
+    Team4602HM2027 robot = new Team4602HM2027();
     ElapsedTime Time = new ElapsedTime();
 
 

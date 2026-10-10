@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous (name="Team4602AutoTimeBased", group="4602")
 public class Team4602AutoTimeBased extends LinearOpMode {
 
-    Team4602HM2025 robot = new Team4602HM2025();
+    Team4602HM2027 robot = new Team4602HM2027();
     ElapsedTime Time = new ElapsedTime();
 
     @Override
