@@ -41,6 +41,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -152,38 +153,38 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
         while (opModeIsActive())
         {
             targetFound = false;
-            desiredTag  = null;
+            AprilTagSingleDetection desiredTag  = null;
 
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
+                // Check if the detection is a standalone single tag
+                if (detection instanceof AprilTagSingleDetection) {
+                    AprilTagSingleDetection singleDet = (AprilTagSingleDetection) detection;
+
+                    // Check to see if this tag matches our desired target ID
+                    if ((singleDet.metadata != null) && (singleDet.id == DESIRED_TAG_ID)) {
                         targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    } else {
-                        // This tag is in the library, but we do not want to track it right now.
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                        desiredTag = singleDet; // Save the matched tag reference
+                        break;  // Found our target, stop looking through the rest
                     }
-                } else {
-                    // This tag is NOT in the library, so we don't have enough information to track to it.
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
                 }
             }
 
             // Tell the driver what we see, and what to do.
-            if (targetFound) {
-                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+            if (targetFound && desiredTag != null) {
+                // Tell the driver what tag it's tracking
+                telemetry.addData("Found Target", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+
+                // Determine heading, range and bearing error to pass to the motor math
+                double rangeError   = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+                double headingError = desiredTag.ftcPose.bearing;
+                double yawError     = desiredTag.ftcPose.yaw;
+
+                // Use your existing driving/motor control calculations here...
+                // Example: moveRobot(drive, strafe, turn);
             } else {
-                telemetry.addData("\n>","Drive using joysticks to find valid target\n");
+                telemetry.addData("Status", "Drive to Target: Looking for ID %d", DESIRED_TAG_ID);
             }
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .

@@ -40,8 +40,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagClusterDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagSingleDetection;
 
 import java.util.List;
 
@@ -222,21 +224,42 @@ public class ConceptAprilTagLocalization extends LinearOpMode {
 
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
-                        detection.robotPose.getPosition().x,
-                        detection.robotPose.getPosition().y,
-                        detection.robotPose.getPosition().z));
-                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
-                        detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
-            } else {
-                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
-                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+
+            // Check if the detection is a single standalone AprilTag
+            if (detection instanceof AprilTagSingleDetection) {
+                AprilTagSingleDetection singleDet = (AprilTagSingleDetection) detection;
+
+                if (singleDet.metadata != null) {
+                    telemetry.addLine(String.format("\n==== (ID %d) %s", singleDet.id, singleDet.metadata.name));
+                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                            singleDet.robotPose.getPosition().x,
+                            singleDet.robotPose.getPosition().y,
+                            singleDet.robotPose.getPosition().z));
+                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+                            singleDet.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
+                            singleDet.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
+                            singleDet.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
+                } else {
+                    telemetry.addLine(String.format("\n==== (ID %d) Unknown", singleDet.id));
+                    telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", singleDet.center.x, singleDet.center.y));
+                }
             }
-        }   // end for() loop
+            // Check if the detection is a BIOBUZZ Cluster
+            else if (detection instanceof AprilTagClusterDetection) {
+                AprilTagClusterDetection clusterDet = (AprilTagClusterDetection) detection;
+
+                if (clusterDet.metadata != null) {
+                    telemetry.addLine(String.format("\n==== (Cluster: %s)", clusterDet.metadata.name));
+                    // Cluster positions use robotPose as well
+                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                            clusterDet.robotPose.getPosition().x,
+                            clusterDet.robotPose.getPosition().y,
+                            clusterDet.robotPose.getPosition().z));
+                } else {
+                    telemetry.addLine("\n==== Unknown Cluster");
+                }
+            }
+        }  // end for() loop
 
         // Add "key" information to telemetry
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");

@@ -18,8 +18,26 @@ apply from: '../build.dependencies.gradle'
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            // ... any other release properties
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
     packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/*.so']
+        }
         jniLibs.useLegacyPackaging true
+        resources {
+            pickFirsts += 'java/desugar_jdk_libs-1.1.1.jar'
+        }
     }
 }
 

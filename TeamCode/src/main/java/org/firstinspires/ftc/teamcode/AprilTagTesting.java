@@ -33,7 +33,7 @@ public class AprilTagTesting {
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(robot.camera)
+        builder.setCamera(robot.camera);
 
     }
 
