@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
 @TeleOp (name = "Team4602TeleOp2027", group = "4602")
 public class Team4602TeleOp2025 extends LinearOpMode {
     Team4602HM2027 robot = new Team4602HM2027();
@@ -55,7 +56,7 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             telemetry.addData("LeftBack", robot.DriveLeftBack.getCurrentPosition());
             telemetry.update();
 
-            if (gamepad1.dpad_up){
+           /* if (gamepad1.dpad_up){
                 moveForward(mag);
             } else if (gamepad1.dpad_down){
                 moveBackward(mag);
@@ -63,12 +64,55 @@ public class Team4602TeleOp2025 extends LinearOpMode {
                 moveLeft(mag);
             } else if (gamepad1.dpad_right){
                 moveRight(mag);
-            }
+            }*/
+            boolean encoderWire = true;
 
-            if (gamepad1.a){
-                robot.DriveLeftFront.setPower(0.5);
+            if (encoderWire) {
+                if (gamepad1.a) {
+                    robot.frontShooter.setVelocity(1000);
+                    robot.backShooter.setVelocity(1000);
+                } else if (gamepad1.b) {
+                    robot.frontShooter.setVelocity(1100);
+                    robot.backShooter.setVelocity(1100);
+                } else if (gamepad1.x) {
+                    robot.frontShooter.setVelocity(1200);
+                    robot.backShooter.setVelocity(1200);
+                } else if (gamepad1.y) {
+                    robot.frontShooter.setVelocity(1300);
+                    robot.backShooter.setVelocity(1300);
+                } else if (gamepad1.left_trigger > 0.3) {
+                    robot.frontShooter.setVelocity(1400);
+                    robot.backShooter.setVelocity(1400);
+                } else if (gamepad1.right_trigger > 0.3) {
+                    robot.frontShooter.setVelocity(1500);
+                    robot.backShooter.setVelocity(1500);
+                }
+                if (gamepad1.dpad_right) {
+                    robot.Turret.setVelocity(175);
             }
+            }
+            else{
+                if (gamepad1.a) {
+                    robot.frontShooter.setPower(0.5);
+                    robot.backShooter.setPower(0.5);
 
+                } else if (gamepad1.b) {
+                    robot.frontShooter.setPower(0.6);
+                    robot.backShooter.setPower(0.6);
+
+                } else if (gamepad1.x) {
+                    robot.frontShooter.setPower(0.7);
+                    robot.backShooter.setPower(0.7);
+                }
+                else if(gamepad1.y){
+                    robot.frontShooter.setPower(0.8);
+                    robot.backShooter.setPower(0.8);
+                }
+                else if (gamepad1.right_trigger > 0.3) {
+                    robot.frontShooter.setPower(0.9);
+                    robot.backShooter.setPower(0.9);
+                }
+            }
         }
     }
 
