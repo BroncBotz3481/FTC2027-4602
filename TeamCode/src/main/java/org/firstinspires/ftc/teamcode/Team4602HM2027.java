@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,6 +17,7 @@ public class Team4602HM2027 {
     public DcMotorEx frontShooter = null;
     public DcMotorEx backShooter = null;
 
+    public AnalogInput DistanceSensor = null;
 
 
 
@@ -37,6 +39,7 @@ public class Team4602HM2027 {
         //   Lights = hwMap.get(RevBlinkinLedDriver.class,"Lights");
         frontShooter = hwMap.get(DcMotorEx.class, "frontShooter");
         backShooter = hwMap.get(DcMotorEx.class, "backShooter");
+        DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
 
         DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
