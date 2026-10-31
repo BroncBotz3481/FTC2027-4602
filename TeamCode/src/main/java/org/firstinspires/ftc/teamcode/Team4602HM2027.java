@@ -18,7 +18,7 @@ public class Team4602HM2027 {
     public DcMotorEx leftShooter = null;
 
     public AnalogInput DistanceSensor = null;
-
+    public DcMotorEx IntakeTransfer = null;
 
 
 
@@ -27,27 +27,27 @@ public class Team4602HM2027 {
     public void Map(HardwareMap hardwareMap)
     {
         hwMap = hardwareMap;
-        // plug x pod into this wheel
-        /*DriveLeftFront = hwMap.get(DcMotorEx.class,"DriveLeftFront");
+        //plug x pod into this wheel
+        DriveLeftFront = hwMap.get(DcMotorEx.class,"DriveLeftFront");
         //plug y pod into this wheel
         DriveRightFront = hwMap.get(DcMotorEx.class,"DriveRightFront");
 
         DriveLeftBack = hwMap.get(DcMotorEx.class,"DriveLeftBack");
-        DriveRightBack = hwMap.get(DcMotorEx.class,"DriveRightBack");*/
-        //Turret = hwMap.get(DcMotorEx.class, "Turret");
-        //camera = hwMap.get(WebcamName.class, "Webcam");
-        //   Lights = hwMap.get(RevBlinkinLedDriver.class,"Lights");*/
+        DriveRightBack = hwMap.get(DcMotorEx.class,"DriveRightBack");
+        Turret = hwMap.get(DcMotorEx.class, "Turret");
+        camera = hwMap.get(WebcamName.class, "Webcam");
+        //Lights = hwMap.get(RevBlinkinLedDriver.class,"Lights");*/
         rightShooter = hwMap.get(DcMotorEx.class, "rightShooter");
         leftShooter = hwMap.get(DcMotorEx.class, "leftShooter");
-       // DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
-
-        /*DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
+        //DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
+        IntakeTransfer = hwMap.get(DcMotorEx.class, "IntakeTransfer");
+        DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         DriveLeftFront.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        *//* If you are using encoders, set to RUN_USING_ENCODER.
+        /* If you are using encoders, set to RUN_USING_ENCODER.
          If you put RUN_USING_ENCODERS and there is no encoder value getting
          recieved then the motor power is set to 1.0 even if you put a different
-         value *//*
+         value */
         DriveLeftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         DriveRightFront.setDirection(DcMotorEx.Direction.REVERSE);
@@ -63,11 +63,11 @@ public class Team4602HM2027 {
         DriveRightBack.setDirection(DcMotorEx.Direction.REVERSE);
         DriveRightBack.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         DriveRightBack.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        DriveRightBack.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);*/
+        DriveRightBack.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        /*Turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        Turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         Turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);*/
+        Turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         rightShooter.setDirection(DcMotorEx.Direction.FORWARD);
         rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);

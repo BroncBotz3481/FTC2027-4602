@@ -22,14 +22,14 @@ public class Team4602TeleOp2025 extends LinearOpMode {
 
         robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        /*robot.DriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.DriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveLeftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveRightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveRightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+        robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
@@ -54,16 +54,16 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            /*robot.DriveLeftFront.setPower(frontLeftPower * mag);
+            robot.DriveLeftFront.setPower(frontLeftPower * mag);
             robot.DriveLeftBack.setPower(backLeftPower * mag);
             robot.DriveRightFront.setPower(frontRightPower * mag);
-            robot.DriveRightBack.setPower(backRightPower * mag);*/
-/*
+            robot.DriveRightBack.setPower(backRightPower * mag);
+
             telemetry.addData("RightFront", robot.DriveRightFront.getCurrentPosition());
             telemetry.addData("RightBack", robot.DriveRightBack.getCurrentPosition());
             telemetry.addData("LeftFront", robot.DriveLeftFront.getCurrentPosition());
             telemetry.addData("LeftBack", robot.DriveLeftBack.getCurrentPosition());
-            telemetry.update();*/
+            telemetry.update();
 
            /* if (gamepad1.dpad_up){
                 moveForward(mag);
@@ -74,9 +74,10 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             } else if (gamepad1.dpad_right){
                 moveRight(mag);
             }*/
-            boolean encoderWire = true;
-
-
+//            boolean encoderWire = true;
+                if (gamepad1.right_trigger > 0.3){
+                    robot.IntakeTransfer.setPower(0.8);
+                }
 
                 if (gamepad1.a) {
                     robot.leftShooter.setVelocity(1000);
