@@ -4,23 +4,32 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
 @TeleOp (name = "Team4602TeleOp2027", group = "4602")
 public class Team4602TeleOp2025 extends LinearOpMode {
+
+
     Team4602HM2027 robot = new Team4602HM2027();
     public void runOpMode() {
         robot.Map(hardwareMap);
         telemetry.addData("Say", "TeleOp Starting");
         telemetry.update();
-        robot.DriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0,13.923 );
+
+        robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        /*robot.DriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveLeftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveRightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveRightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
         waitForStart();
 
@@ -45,16 +54,16 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            robot.DriveLeftFront.setPower(frontLeftPower * mag);
+            /*robot.DriveLeftFront.setPower(frontLeftPower * mag);
             robot.DriveLeftBack.setPower(backLeftPower * mag);
             robot.DriveRightFront.setPower(frontRightPower * mag);
-            robot.DriveRightBack.setPower(backRightPower * mag);
-
+            robot.DriveRightBack.setPower(backRightPower * mag);*/
+/*
             telemetry.addData("RightFront", robot.DriveRightFront.getCurrentPosition());
             telemetry.addData("RightBack", robot.DriveRightBack.getCurrentPosition());
             telemetry.addData("LeftFront", robot.DriveLeftFront.getCurrentPosition());
             telemetry.addData("LeftBack", robot.DriveLeftBack.getCurrentPosition());
-            telemetry.update();
+            telemetry.update();*/
 
            /* if (gamepad1.dpad_up){
                 moveForward(mag);
@@ -67,58 +76,61 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             }*/
             boolean encoderWire = true;
 
-            if (encoderWire) {
+
+
                 if (gamepad1.a) {
-                    robot.frontShooter.setVelocity(1000);
-                    robot.backShooter.setVelocity(1000);
+                    robot.leftShooter.setVelocity(1000);
+                    robot.rightShooter.setVelocity(1000);
                 } else if (gamepad1.b) {
-                    robot.frontShooter.setVelocity(1100);
-                    robot.backShooter.setVelocity(1100);
+                    robot.leftShooter.setVelocity(1100);
+                    robot.rightShooter.setVelocity(1100);
                 } else if (gamepad1.x) {
-                    robot.frontShooter.setVelocity(1200);
-                    robot.backShooter.setVelocity(1200);
+                    robot.leftShooter.setVelocity(1200);
+                    robot.rightShooter.setVelocity(1200);
                 } else if (gamepad1.y) {
-                    robot.frontShooter.setVelocity(1300);
-                    robot.backShooter.setVelocity(1300);
-                } else if (gamepad1.left_trigger > 0.3) {
-                    robot.frontShooter.setVelocity(1400);
-                    robot.backShooter.setVelocity(1400);
+                    robot.leftShooter.setVelocity(1300);
+                    robot.rightShooter.setVelocity(1300);
                 } else if (gamepad1.right_trigger > 0.3) {
-                    robot.frontShooter.setVelocity(1500);
-                    robot.backShooter.setVelocity(1500);
+                    robot.leftShooter.setVelocity(1500);
+                    robot.rightShooter.setVelocity(1500);
+                } else if (gamepad1.left_trigger > 0.3) {
+                    robot.leftShooter.setVelocity(100);
+                    robot.rightShooter.setVelocity(100);
+                } else {
+                    robot.leftShooter.setVelocity(0);
+                    robot.rightShooter.setVelocity(0);
                 }
-                if (gamepad1.dpad_right) {
-                    robot.Turret.setVelocity(175);
-            }
-            }
-            else{
-                if (gamepad1.a) {
-                    robot.frontShooter.setPower(0.5);
-                    robot.backShooter.setPower(0.5);
 
-                } else if (gamepad1.b) {
-                    robot.frontShooter.setPower(0.6);
-                    robot.backShooter.setPower(0.6);
-
-                } else if (gamepad1.x) {
-                    robot.frontShooter.setPower(0.7);
-                    robot.backShooter.setPower(0.7);
-                }
-                else if(gamepad1.y){
-                    robot.frontShooter.setPower(0.8);
-                    robot.backShooter.setPower(0.8);
-                }
-                else if (gamepad1.right_trigger > 0.3) {
-                    robot.frontShooter.setPower(0.9);
-                    robot.backShooter.setPower(0.9);
-                }
-            }
         }
+        /*if (!encoderWire) {
+            if (gamepad1.a) {
+                robot.rightShooter.setPower(0.5);
+                robot.leftShooter.setPower(0.5);
+
+            } else if (gamepad1.b) {
+                robot.rightShooter.setPower(0.6);
+                robot.leftShooter.setPower(0.6);
+
+            } else if (gamepad1.x) {
+                robot.rightShooter.setPower(0.7);
+                robot.leftShooter.setPower(0.7);
+            } else if (gamepad1.y) {
+                robot.rightShooter.setPower(0.8);
+                robot.leftShooter.setPower(0.8);
+            } else if (gamepad1.right_trigger > 0.3) {
+                robot.rightShooter.setPower(0.9);
+                robot.leftShooter.setPower(0.9);
+            } else {
+                robot.rightShooter.setPower(0);
+                robot.leftShooter.setPower(0);
+            }
+        }*/
+    }
     }
 
 
     // class specific method that aren't in constants file go here
-    public void exampleMethod (double power){
+    /*public void exampleMethod (double power){
 
         robot.DriveLeftFront.setPower(power); robot.DriveRightFront.setPower(-power);
         robot.DriveLeftBack.setPower(-power);   robot.DriveRightBack.setPower(power);
@@ -161,5 +173,5 @@ public class Team4602TeleOp2025 extends LinearOpMode {
         robot.DriveRightBack.setPower(0);
         robot.DriveLeftBack.setPower(0);
 
-    }
-}
+    }*/
+

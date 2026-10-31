@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode;
 
 
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 public class AnalogSensorTest {
 
     Team4602HM2027 robot = new Team4602HM2027();
-    @TeleOp(name = "laserAnalogExample")
+    //@TeleOp(name = "laserAnalogExample")
 
     public class laserAnalogExample extends LinearOpMode {
 
@@ -43,3 +44,4 @@ public class AnalogSensorTest {
         }
     }
 }
+*/
