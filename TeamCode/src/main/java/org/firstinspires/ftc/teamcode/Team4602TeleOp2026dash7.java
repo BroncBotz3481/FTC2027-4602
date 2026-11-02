@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
-@TeleOp (name = "Team4602TeleOp2027", group = "4602")
-public class Team4602TeleOp2025 extends LinearOpMode {
+@TeleOp (name = "Team4602TeleOp2026-7 -_-", group = "4602")
+public class Team4602TeleOp2026dash7 extends LinearOpMode {
 
 
     Team4602HM2027 robot = new Team4602HM2027();
     public void runOpMode() {
         robot.Map(hardwareMap);
+        robot.IntakeArm.setPosition(1);
         telemetry.addData("Say", "TeleOp Starting");
         telemetry.update();
 
@@ -35,12 +36,16 @@ public class Team4602TeleOp2025 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            robot.IntakeArm.setPosition(0);
+
             boolean speedslow = gamepad1.right_bumper;
             double mag = speedslow ? 0.5 : 1.0;
 
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = -gamepad1.right_stick_x;
+
+            double turretY = gamepad2.left_stick_x;
 
             // Optional Deadzones
 //            double y = (Math.abs(gamepad1.left_stick_y) > 0.1 ? gamepad1.left_stick_y : 0); // Remember, this is reversed!
@@ -53,6 +58,10 @@ public class Team4602TeleOp2025 extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
+
+            if (turretY > 0.1) {
+                robot.Turret.setPower(Math.min(turretY,0.4));
+            }
 
             robot.DriveLeftFront.setPower(frontLeftPower * mag);
             robot.DriveLeftBack.setPower(backLeftPower * mag);
@@ -75,8 +84,8 @@ public class Team4602TeleOp2025 extends LinearOpMode {
                 moveRight(mag);
             }*/
 //            boolean encoderWire = true;
-                if (gamepad1.right_trigger > 0.3){
-                    robot.IntakeTransfer.setPower(0.8);
+                if (gamepad1.right_trigger > 0.2){
+                    robot.IntakeTransfer.setPower(0.9);
                 }
 
                 if (gamepad1.a) {
@@ -95,12 +104,14 @@ public class Team4602TeleOp2025 extends LinearOpMode {
                     robot.leftShooter.setVelocity(1500);
                     robot.rightShooter.setVelocity(1500);
                 } else if (gamepad1.left_trigger > 0.3) {
-                    robot.leftShooter.setVelocity(100);
-                    robot.rightShooter.setVelocity(100);
+                    robot.leftShooter.setVelocity(1000);
+                    robot.rightShooter.setVelocity(1000);
                 } else {
                     robot.leftShooter.setVelocity(0);
                     robot.rightShooter.setVelocity(0);
                 }
+
+
 
         }
         /*if (!encoderWire) {

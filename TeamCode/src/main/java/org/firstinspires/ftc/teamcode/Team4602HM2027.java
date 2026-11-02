@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -16,9 +17,9 @@ public class Team4602HM2027 {
     public DcMotorEx Turret = null;
     public DcMotorEx rightShooter = null;
     public DcMotorEx leftShooter = null;
-
     public AnalogInput DistanceSensor = null;
     public DcMotorEx IntakeTransfer = null;
+    public Servo IntakeArm = null;
 
 
 
@@ -41,9 +42,12 @@ public class Team4602HM2027 {
         leftShooter = hwMap.get(DcMotorEx.class, "leftShooter");
         //DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
         IntakeTransfer = hwMap.get(DcMotorEx.class, "IntakeTransfer");
+        IntakeArm = hwMap.get(Servo.class, "IntakeArm");
+
         DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         DriveLeftFront.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
         /* If you are using encoders, set to RUN_USING_ENCODER.
          If you put RUN_USING_ENCODERS and there is no encoder value getting
          recieved then the motor power is set to 1.0 even if you put a different
@@ -78,6 +82,12 @@ public class Team4602HM2027 {
         leftShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         leftShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        IntakeTransfer.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
 
     }
 }
