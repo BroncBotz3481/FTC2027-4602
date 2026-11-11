@@ -8,18 +8,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
-@TeleOp (name = "Team4602TeleOp2026-7 -_-", group = "4602")
-public class Team4602TeleOp2026dash7 extends LinearOpMode {
+@TeleOp (name = "Team4602TeleOp2026", group = "4602")
+public class Team4602TeleOp2027 extends LinearOpMode {
 
 
     Team4602HM2027 robot = new Team4602HM2027();
+
     public void runOpMode() {
         robot.Map(hardwareMap);
-        robot.IntakeArm.setPosition(1);
+
         telemetry.addData("Say", "TeleOp Starting");
         telemetry.update();
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0,13.923 );
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0, 13.923);
 
         robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -36,7 +37,8 @@ public class Team4602TeleOp2026dash7 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            robot.IntakeArm.setPosition(0);
+            robot.IntakeArm.setPosition(1);
+            telemetry.addData("Intake Arm Position", robot.IntakeArm.getPosition());
 
             boolean speedslow = gamepad1.right_bumper;
             double mag = speedslow ? 0.5 : 1.0;
@@ -59,9 +61,12 @@ public class Team4602TeleOp2026dash7 extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            if (turretY > 0.1) {
-                robot.Turret.setPower(Math.min(turretY,0.4));
+            /*if (turretY > 0.1) {
+                robot.Turret.setPower(Math.min(turretY, 0.4));
             }
+            else if(turretY < -0.1){
+                robot.Turret.setPower(Math.max(turretY,-0.4));
+            }*/
 
             robot.DriveLeftFront.setPower(frontLeftPower * mag);
             robot.DriveLeftBack.setPower(backLeftPower * mag);
@@ -84,75 +89,68 @@ public class Team4602TeleOp2026dash7 extends LinearOpMode {
                 moveRight(mag);
             }*/
 //            boolean encoderWire = true;
-                if (gamepad1.right_trigger > 0.2){
-                    robot.IntakeTransfer.setPower(0.9);
-                }
+            if (gamepad1.right_trigger > 0.2) {
+                robot.IntakeTransfer.setPower(0.98);
+            }
+            else if(gamepad1.right_bumper){
+                robot.IntakeTransfer.setPower(-0.98);
+            }
+            else{
+                robot.IntakeTransfer.setPower(0);
+            }
 
-                if (gamepad1.a) {
-                    robot.leftShooter.setVelocity(1000);
-                    robot.rightShooter.setVelocity(1000);
-                } else if (gamepad1.b) {
-                    robot.leftShooter.setVelocity(1100);
-                    robot.rightShooter.setVelocity(1100);
-                } else if (gamepad1.x) {
-                    robot.leftShooter.setVelocity(1200);
-                    robot.rightShooter.setVelocity(1200);
-                } else if (gamepad1.y) {
-                    robot.leftShooter.setVelocity(1300);
-                    robot.rightShooter.setVelocity(1300);
-                } else if (gamepad1.right_trigger > 0.3) {
-                    robot.leftShooter.setVelocity(1500);
-                    robot.rightShooter.setVelocity(1500);
-                } else if (gamepad1.left_trigger > 0.3) {
-                    robot.leftShooter.setVelocity(1000);
-                    robot.rightShooter.setVelocity(1000);
-                } else {
-                    robot.leftShooter.setVelocity(0);
-                    robot.rightShooter.setVelocity(0);
-                }
+           /* if (gamepad1.a) {
+                robot. IntakeTransfer.setPower(0.6);
+                robot.leftShooter.setPower(-0.45);
+                robot.rightShooter.setPower(0.45);
+                sleep(200);
 
+            }*/
+            if (gamepad2.b) {
+                robot.leftShooter.setVelocity(1100);
+                robot.rightShooter.setVelocity(1100);
+            } else if (gamepad2.x) {
+                robot.leftShooter.setVelocity(1200);
+                robot.rightShooter.setVelocity(1200);
+            } else if (gamepad2.y) {
+                robot.leftShooter.setVelocity(900);
+                robot.rightShooter.setVelocity(900);
+            } else if (gamepad2.a) {
+                robot.leftShooter.setVelocity(1000);
+                robot.rightShooter.setVelocity(1000);
+            }
 
+            else if(gamepad2.right_bumper){
+                robot.leftShooter.setVelocity(+900);
+                robot.rightShooter.setVelocity(-900);
+            }
+            else {
+                robot.leftShooter.setPower(0);
+                robot.rightShooter.setPower(0);
+            }
+
+            telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
 
         }
-        /*if (!encoderWire) {
-            if (gamepad1.a) {
-                robot.rightShooter.setPower(0.5);
-                robot.leftShooter.setPower(0.5);
-
-            } else if (gamepad1.b) {
-                robot.rightShooter.setPower(0.6);
-                robot.leftShooter.setPower(0.6);
-
-            } else if (gamepad1.x) {
-                robot.rightShooter.setPower(0.7);
-                robot.leftShooter.setPower(0.7);
-            } else if (gamepad1.y) {
-                robot.rightShooter.setPower(0.8);
-                robot.leftShooter.setPower(0.8);
-            } else if (gamepad1.right_trigger > 0.3) {
-                robot.rightShooter.setPower(0.9);
-                robot.leftShooter.setPower(0.9);
-            } else {
-                robot.rightShooter.setPower(0);
-                robot.leftShooter.setPower(0);
-            }
-        }*/
-    }
     }
 
 
     // class specific method that aren't in constants file go here
-    /*public void exampleMethod (double power){
+    public void exampleMethod(double power) {
 
-        robot.DriveLeftFront.setPower(power); robot.DriveRightFront.setPower(-power);
-        robot.DriveLeftBack.setPower(-power);   robot.DriveRightBack.setPower(power);
+        robot.DriveLeftFront.setPower(power);
+        robot.DriveRightFront.setPower(-power);
+        robot.DriveLeftBack.setPower(-power);
+        robot.DriveRightBack.setPower(power);
     }
+
     public void moveLeft(double power) {
         robot.DriveLeftFront.setPower(power);
         robot.DriveRightFront.setPower(-power);
         robot.DriveLeftBack.setPower(-power);
         robot.DriveRightBack.setPower(power);
     }
+
     //
     public void moveRight(double power) {
         // Left Wheels                         //Right Wheels
@@ -185,5 +183,5 @@ public class Team4602TeleOp2026dash7 extends LinearOpMode {
         robot.DriveRightBack.setPower(0);
         robot.DriveLeftBack.setPower(0);
 
-    }*/
-
+    }
+}

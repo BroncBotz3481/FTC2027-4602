@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,7 +37,7 @@ public class Team4602HM2027 {
         DriveLeftBack = hwMap.get(DcMotorEx.class,"DriveLeftBack");
         DriveRightBack = hwMap.get(DcMotorEx.class,"DriveRightBack");
         Turret = hwMap.get(DcMotorEx.class, "Turret");
-        camera = hwMap.get(WebcamName.class, "Webcam");
+        //camera = hwMap.get(WebcamName.class, "Webcam");
         //Lights = hwMap.get(RevBlinkinLedDriver.class,"Lights");*/
         rightShooter = hwMap.get(DcMotorEx.class, "rightShooter");
         leftShooter = hwMap.get(DcMotorEx.class, "leftShooter");
@@ -73,7 +74,7 @@ public class Team4602HM2027 {
         Turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         Turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        rightShooter.setDirection(DcMotorEx.Direction.FORWARD);
+        rightShooter.setDirection(DcMotorEx.Direction.REVERSE);
         rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -83,10 +84,8 @@ public class Team4602HM2027 {
         leftShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        IntakeTransfer.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeTransfer.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        leftShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
 
     }

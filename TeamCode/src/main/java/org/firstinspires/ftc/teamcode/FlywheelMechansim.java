@@ -9,9 +9,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @TeleOp
 public class FlywheelMechansim extends OpMode {
     Team4602HM2027 robot = new Team4602HM2027();
-    public double highVelocity = 1450;
-    public double lowVelocity = 1000;
-
+    public double highVelocity = 1300;
+    public double lowVelocity = 900;
     public double curTargetVelocity = highVelocity;
 
     double F = 0;
@@ -71,7 +70,5 @@ public class FlywheelMechansim extends OpMode {
         telemetry.addData("Tuning P", "%.4f (Dpad U/D)",P);
         telemetry.addData("Tuning F", "%.4f (Dpad L/R)",F);
         telemetry.addData("Step Size", "%.4f (B button) ", stepSizes[stepIndex]);
-
-
     }
 }

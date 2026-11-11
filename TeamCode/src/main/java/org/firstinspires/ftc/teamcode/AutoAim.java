@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "AutoAimTestIterative", group = "4602")
 public class AutoAim extends OpMode {
@@ -12,58 +13,39 @@ public class AutoAim extends OpMode {
     final double POD_DIAMETER = 1.8898;
     final double POD_CIRCUMFERENCE = POD_DIAMETER * Math.PI;
     final double maxPower = 0.4;
-    final double numTics = 383.6;
+    final double numTicsTurret = 383.6;
 
     public double xPos = 0;
     public double yPos = 0;
-    public final  int hub1XPos = 60;
-    public final int hub1YPos = 72;
+    public final  int hub1RedXPos = 60;
+    public final int hub1RedYPos = 72;
 
-    public final int hub2XPos = 96;
-    public final int hub2YPos = 72;
+    public final int hub2RedXPos = 96;
+    public final int hub2RedYPos = 72;
+
+    public final  int hub1BlueXPos = 60;
+    public final int hub1BlueYPos = 72;
+
+    public final int hub2BlueXPos = 96;
+    public final int hub2BlueYPos = 72;
+
+    public final boolean isHub1 = true;
 
     //--------- PID Tuning ---------
-
-    double kP = 0.0002;
-    double error = 0;
-    double lastError = 0;
-    double goalX = 0;
-    double angleTolerance = 1;
-    double MAX_POWER = 0.6;
-    private double power = 0;
-
-    double kD = 0;
-    double curTime = 0;
-    double lastTime = 0;
-    double [] stepSizes = {1.0,0.1,0.001,0.0001};
-    int stepIndex = 2;
-
 
     @Override
     public void init() {
         robot.Map(hardwareMap);
-    }
 
-    public void start(){
-        resetRuntime();
-        curTime = getRuntime();
     }
 
     @Override
     public void loop() {
         updatePosition();
 
-        double distanceToHub = Math.hypot(Math.abs(hub1XPos - xPos), Math.abs(hub1YPos - yPos));
-        double angleToHub = Math.toDegrees(Math.atan2(hub1YPos - yPos, hub1XPos - xPos));
-
-        int targetTicks = (int) Math.round(angleToHub * (numTics / 360));
+        int targetTicks = findTurretAngle(xPos,yPos);
 
         updateTurretPosition(targetTicks);
-
-        telemetry.addData("Current X (in)", "%.2f", xPos);
-        telemetry.addData("Current Y (in)", "%.2f", yPos);
-        telemetry.addData("Distance to Hub", "%.2f in", distanceToHub);
-        telemetry.addData("Angle to Hub", "%.2f deg", angleToHub);
     }
 
     public void updatePosition() {
@@ -74,7 +56,19 @@ public class AutoAim extends OpMode {
         yPos = (currentYInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE;
     }
 
+    public int findTurretAngle(double posX , double posY){
+        double distanceToHub = Math.hypot(Math.abs(hub1XPos - xPos), Math.abs(hub1YPos - yPos));
+        double angleToHub = Math.toDegrees(Math.atan2(hub1YPos - yPos, hub1XPos - xPos));
+
+
+
+
+
+        return
+    }
+
     public void updateTurretPosition(int targetTicks) {
         robot.Turret.setTargetPosition(targetTicks);
+        robot.Turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }
