@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @TeleOp
 public class TurretPID extends OpMode {
     Team4602HM2027 robot = new Team4602HM2027();
-    public double highPosition = 1450;
-    public double lowPosition = 1000;
+    public double highPosition = 333;
+    public double lowPosition = 50;
 
     public double curTargetPosition = highPosition;
 
@@ -62,12 +63,12 @@ public class TurretPID extends OpMode {
         double curPosition = robot.Turret.getCurrentPosition();
         double error = curTargetPosition - curPosition;
 
-        telemetry.addData("Target Velocity", curTargetPosition);
-        telemetry.addData("Current Velocity", "%.2f", curTargetPosition);
+        telemetry.addData("Target Position", curTargetPosition);
+        telemetry.addData("Current Position", "%.2f", curPosition);
         telemetry.addData("Error", "%.2f", error);
         telemetry.addLine("--------------------------");
         telemetry.addData("Tuning P", "%.4f (Dpad U/D)",P);
-        telemetry.addData("Tuning F", "%.4f (Dpad L/R)",D);
+        telemetry.addData("Tuning D", "%.4f (Dpad L/R)",D);
         telemetry.addData("Step Size", "%.4f (B button) ", stepSizes[stepIndex]);
 
 

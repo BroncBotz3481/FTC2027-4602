@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @Autonomous(name = "AutoAimTestIterative", group = "4602")
 public class AutoAim extends OpMode {
 
@@ -17,21 +19,28 @@ public class AutoAim extends OpMode {
 
     public double xPos = 0;
     public double yPos = 0;
-    public final  int hub1RedXPos = 60;
-    public final int hub1RedYPos = 72;
 
-    public final int hub2RedXPos = 96;
-    public final int hub2RedYPos = 72;
+    // NEED TO FIND THESE VALUES
+    public final double xOffset = 7;
+    public final double yOffset = 4;
+    public final  int hub1RedXPos = 58;
+    public final int hub1RedYPos = 61;
 
-    public final  int hub1BlueXPos = 60;
-    public final int hub1BlueYPos = 72;
+    public final int hub2RedXPos = 58;
+    public final int hub2RedYPos = 82;
 
-    public final int hub2BlueXPos = 96;
-    public final int hub2BlueYPos = 72;
+    public final  int hub1BlueXPos = 84;
+    public final int hub1BlueYPos = 61;
+
+    public final int hub2BlueXPos = 84;
+    public final int hub2BlueYPos = 82;
+
+    // NEED TO CHANGE THESE NUMBERS LATER!!!
+    public final int minTurn = -100;
+    public final int maxTurn = 100;
 
     public final boolean isHub1 = true;
-
-    //--------- PID Tuning ---------
+    boolean isRed = true;
 
     @Override
     public void init() {
@@ -52,23 +61,54 @@ public class AutoAim extends OpMode {
         double currentXInTicks = robot.DriveLeftFront.getCurrentPosition();
         double currentYInTicks = robot.DriveRightBack.getCurrentPosition();
 
-        xPos = (currentXInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE;
-        yPos = (currentYInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE;
+        xPos = ((currentXInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE) + xOffset;
+        yPos = ((currentYInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE) + yOffset;
     }
 
     public int findTurretAngle(double posX , double posY){
-        double distanceToHub = Math.hypot(Math.abs(hub1XPos - xPos), Math.abs(hub1YPos - yPos));
-        double angleToHub = Math.toDegrees(Math.atan2(hub1YPos - yPos, hub1XPos - xPos));
+        double angleToHub = 0;
 
+        if(isHub1) {
+            angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - yPos, hub1RedXPos - xPos));
+        }
+        else{
+            angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - yPos, hub2RedXPos - xPos));
+        }
 
+        double relativeAngle = (angleToHub - getHeading());
 
+        changeAngle(relativeAngle);
 
-
-        return
+        if(relativeAngle > minTurn && relativeAngle < maxTurn){
+            return (int) Math.round(relativeAngle);
+        }
+        else{
+            telemetry.addLine("OUT OF RANGE");
+            return 0;
+        }
     }
 
     public void updateTurretPosition(int targetTicks) {
         robot.Turret.setTargetPosition(targetTicks);
-        robot.Turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    int angleToTicks(double angle) {
+        return (int) Math.round(angle * numTicsTurret / 360);
+    }
+
+    public double getHeading(){
+        return robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+
+    //this makes it so the angle is always between 0 - +- 180 degrees so it goes the shortest path
+    public double changeAngle(double relativeAngle){
+        if(relativeAngle > 180){
+            relativeAngle = relativeAngle - 360;
+        }
+        else if(relativeAngle < -180){
+            relativeAngle = relativeAngle + 360;
+        }
+        return relativeAngle;
     }
 }

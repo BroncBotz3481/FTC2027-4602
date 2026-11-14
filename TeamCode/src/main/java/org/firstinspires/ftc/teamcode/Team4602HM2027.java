@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -22,6 +24,8 @@ public class Team4602HM2027 {
     public DcMotorEx IntakeTransfer = null;
     public Servo IntakeArm = null;
 
+    public IMU imu = null;
+
 
 
 
@@ -29,11 +33,9 @@ public class Team4602HM2027 {
     public void Map(HardwareMap hardwareMap)
     {
         hwMap = hardwareMap;
-        //plug x pod into this wheel
-        DriveLeftFront = hwMap.get(DcMotorEx.class,"DriveLeftFront");
-        //plug y pod into this wheel
-        DriveRightFront = hwMap.get(DcMotorEx.class,"DriveRightFront");
 
+        DriveLeftFront = hwMap.get(DcMotorEx.class,"DriveLeftFront");
+        DriveRightFront = hwMap.get(DcMotorEx.class,"DriveRightFront");
         DriveLeftBack = hwMap.get(DcMotorEx.class,"DriveLeftBack");
         DriveRightBack = hwMap.get(DcMotorEx.class,"DriveRightBack");
         Turret = hwMap.get(DcMotorEx.class, "Turret");
@@ -43,17 +45,17 @@ public class Team4602HM2027 {
         leftShooter = hwMap.get(DcMotorEx.class, "leftShooter");
         //DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
         IntakeTransfer = hwMap.get(DcMotorEx.class, "IntakeTransfer");
-        IntakeArm = hwMap.get(Servo.class, "IntakeArm");
+        imu = hwMap.get(IMU.class, "imu");
 
         DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         DriveLeftFront.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        DriveLeftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         /* If you are using encoders, set to RUN_USING_ENCODER.
          If you put RUN_USING_ENCODERS and there is no encoder value getting
          recieved then the motor power is set to 1.0 even if you put a different
          value */
-        DriveLeftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         DriveRightFront.setDirection(DcMotorEx.Direction.REVERSE);
         DriveRightFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -72,7 +74,8 @@ public class Team4602HM2027 {
 
         Turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         Turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        Turret.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        Turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         rightShooter.setDirection(DcMotorEx.Direction.REVERSE);
         rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -86,6 +89,12 @@ public class Team4602HM2027 {
 
         IntakeTransfer.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
+
+        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
 
 
     }
