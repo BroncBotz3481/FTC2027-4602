@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+// this won't work because odometry math is wrong, will change later
 @Autonomous(name = "AutoAimTestIterative", group = "4602")
 public class AutoAim extends OpMode {
 
@@ -52,7 +53,7 @@ public class AutoAim extends OpMode {
     public void loop() {
         updatePosition();
 
-        int targetTicks = findTurretAngle(xPos,yPos);
+        int targetTicks = findTurretTicks(xPos,yPos);
 
         updateTurretPosition(targetTicks);
     }
@@ -65,7 +66,7 @@ public class AutoAim extends OpMode {
         yPos = ((currentYInTicks / TICKS_PER_REV) * POD_CIRCUMFERENCE) + yOffset;
     }
 
-    public int findTurretAngle(double posX , double posY){
+    public int findTurretTicks(double posX , double posY){
         double angleToHub = 0;
 
         if(isHub1) {
@@ -75,12 +76,12 @@ public class AutoAim extends OpMode {
             angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - yPos, hub2RedXPos - xPos));
         }
 
-        double relativeAngle = (angleToHub - getHeading());
+        double relativeAngle = (angleToHub - getHeading()) + 180;
 
-        changeAngle(relativeAngle);
+        relativeAngle = changeAngle(relativeAngle);
 
         if(relativeAngle > minTurn && relativeAngle < maxTurn){
-            return (int) Math.round(relativeAngle);
+            return (int) Math.round(angleToTicks(relativeAngle));
         }
         else{
             telemetry.addLine("OUT OF RANGE");
