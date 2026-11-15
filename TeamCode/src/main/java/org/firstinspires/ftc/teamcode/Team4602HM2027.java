@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Team4602HM2027 {
     public DcMotorEx DriveRightBack = null;
@@ -24,7 +26,7 @@ public class Team4602HM2027 {
     public DcMotorEx IntakeTransfer = null;
     public Servo IntakeArm = null;
 
-    public IMU imu = null;
+    public GoBildaPinpointDriver pinpoint = null;
 
 
 
@@ -45,7 +47,7 @@ public class Team4602HM2027 {
         leftShooter = hwMap.get(DcMotorEx.class, "leftShooter");
         //DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
         IntakeTransfer = hwMap.get(DcMotorEx.class, "IntakeTransfer");
-        imu = hwMap.get(IMU.class, "imu");
+        pinpoint = hwMap.get(GoBildaPinpointDriver.class, "pinpoint");
 
         DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -90,11 +92,14 @@ public class Team4602HM2027 {
         IntakeTransfer.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
+        //need to find the actual value
+        pinpoint.setOffsets(-7,-4, DistanceUnit.INCH);
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
+                GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
-        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+
+
 
 
     }

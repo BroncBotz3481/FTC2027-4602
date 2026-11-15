@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 
 @TeleOp (name = "Team4602TeleOp2026", group = "4602")
 public class Team4602TeleOp2027 extends LinearOpMode {
@@ -15,10 +17,14 @@ public class Team4602TeleOp2027 extends LinearOpMode {
     Team4602HM2027 robot = new Team4602HM2027();
 
     public void runOpMode() {
+
+        AutoAim autoAim;
         robot.Map(hardwareMap);
 
         telemetry.addData("Say", "TeleOp Starting");
         telemetry.update();
+
+        autoAim = new AutoAim(robot);
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0, 13.923);
 
@@ -35,10 +41,16 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
         waitForStart();
 
+        boolean isHub1 = true;
+
+        boolean isRed = true;
+
         while (opModeIsActive()) {
 
-            robot.IntakeArm.setPosition(1);
-            telemetry.addData("Intake Arm Position", robot.IntakeArm.getPosition());
+            robot.pinpoint.update();
+
+            double xPos = robot.pinpoint.getPosX(DistanceUnit.INCH);
+            double yPos = robot.pinpoint.getPosY(DistanceUnit.INCH);
 
             boolean speedslow = gamepad1.right_bumper;
             double mag = speedslow ? 0.5 : 1.0;
@@ -79,15 +91,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             telemetry.addData("LeftBack", robot.DriveLeftBack.getCurrentPosition());
             telemetry.update();
 
-           /* if (gamepad1.dpad_up){
-                moveForward(mag);
-            } else if (gamepad1.dpad_down){
-                moveBackward(mag);
-            } else if (gamepad1.dpad_left){
-                moveLeft(mag);
-            } else if (gamepad1.dpad_right){
-                moveRight(mag);
-            }*/
 //            boolean encoderWire = true;
             if (gamepad1.right_trigger > 0.2) {
                 robot.IntakeTransfer.setPower(0.98);
@@ -109,27 +112,25 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             if (gamepad2.b) {
                 robot.leftShooter.setVelocity(1100);
                 robot.rightShooter.setVelocity(1100);
-            } else if (gamepad2.x) {
-                robot.leftShooter.setVelocity(1200);
-                robot.rightShooter.setVelocity(1200);
-            } else if (gamepad2.y) {
-                robot.leftShooter.setVelocity(900);
-                robot.rightShooter.setVelocity(900);
             } else if (gamepad2.a) {
                 robot.leftShooter.setVelocity(1000);
                 robot.rightShooter.setVelocity(1000);
             }
-
             else if(gamepad2.right_bumper){
                 robot.leftShooter.setVelocity(+900);
-                robot.rightShooter.setVelocity(-900);
+                robot.rightShooter.setVelocity(900);
             }
             else {
                 robot.leftShooter.setPower(0);
                 robot.rightShooter.setPower(0);
             }
+            if(gamepad2.x){
+                isHub1 = false;
+            }
 
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
+
+            autoAim.TurretAim(xPos,yPos,isHub1,isRed);
 
         }
     }
