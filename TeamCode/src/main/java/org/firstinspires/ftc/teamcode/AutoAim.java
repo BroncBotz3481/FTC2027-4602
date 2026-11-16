@@ -28,6 +28,10 @@ public class AutoAim {
     public final int hub2BlueXPos = 84;
     public final int hub2BlueYPos = 82;
 
+    final double posHubOffset = 8;
+    final double negHubOffset = -8;
+
+
     // NEED TO CHANGE THESE NUMBERS LATER!!!
     public final int minTurn = -100;
     public final int maxTurn = 100;
@@ -47,16 +51,43 @@ public class AutoAim {
     public int findTurretTicks(double posX , double posY, boolean isHub1, boolean isRed){
         double angleToHub = 0;
 
-        if(isRed) {
-            if (isHub1) {
+        if(isRed && isHub1) {
+            if (posX > 0 && posX < 48 && posY > 0 && posY < 48) {
+                angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos + posHubOffset - posX));
+            } else if (posX > 72 && posX < 144 && posY > 0 && posY < 48){
+                angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos + negHubOffset - posX));
+            }
+            else{
                 angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos - posX));
-            } else {
+            }
+        }else if(isRed && !isHub1){
+            if (posX > 0 && posX < 48 && posY > 96 && posY < 144) {
+                angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - posY, hub2RedXPos + posHubOffset - posX));
+            } else if(posX > 72 && posX < 144 && posY > 96 && posY < 144){
+                angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - posY, hub2RedXPos + negHubOffset - posX));
+            }
+            else{
                 angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - posY, hub2RedXPos - posX));
             }
-        }else{
-            if (isHub1) {
+        }
+        else if(!isRed && isHub1) {
+            if (posX > 0 && posX < 72 && posY > 0 && posY < 48) {
+                angleToHub = Math.toDegrees(Math.atan2(hub1BlueYPos - posY, hub1BlueXPos + posHubOffset - posX));
+            } else if (posX > 96 && posX < 144 && posY > 0 && posY < 48) {
+                angleToHub = Math.toDegrees(Math.atan2(hub1BlueYPos - posY, hub1BlueXPos + negHubOffset - posX));
+            }
+            else{
                 angleToHub = Math.toDegrees(Math.atan2(hub1BlueYPos - posY, hub1BlueXPos - posX));
-            } else {
+            }
+        }
+        else{
+            if (posX > 0 && posX < 72 && posY > 96 && posY < 144){
+                angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos + posHubOffset - posX));
+            }
+            else if(posX > 96 && posX < 144 && posY > 96 && posY < 144){
+                angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos + negHubOffset - posX));
+            }
+            else{
                 angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos - posX));
             }
         }
