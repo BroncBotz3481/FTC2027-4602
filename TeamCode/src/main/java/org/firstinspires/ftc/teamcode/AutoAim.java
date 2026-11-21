@@ -116,8 +116,6 @@ public class AutoAim {
         return robot.pinpoint.getHeading(AngleUnit.DEGREES);
     }
 
-
-
     //this makes it so the angle is always between 0 - +- 180 degrees so it goes the shortest path
     public double changeAngle(double relativeAngle){
         if(relativeAngle > 180){

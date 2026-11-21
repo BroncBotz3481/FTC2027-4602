@@ -45,12 +45,18 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
         boolean isRed = true;
 
+        PIDFCoefficients turretPidfCoefficients = new PIDFCoefficients(11, 0, 0,0);
+        robot.Turret.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, turretPidfCoefficients);
+
         while (opModeIsActive()) {
+            //robot.Turret.setPower(0.4);
 
             robot.pinpoint.update();
 
             double xPos = robot.pinpoint.getPosX(DistanceUnit.INCH);
             double yPos = robot.pinpoint.getPosY(DistanceUnit.INCH);
+
+            telemetry.addData("Pos", "(" + xPos + ", " + yPos + ")");
 
             boolean speedslow = gamepad1.right_bumper;
             double mag = speedslow ? 0.5 : 1.0;
@@ -94,6 +100,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 //            boolean encoderWire = true;
             if (gamepad1.right_trigger > 0.2) {
                 robot.IntakeTransfer.setPower(0.98);
+
             }
             else if(gamepad1.right_bumper){
                 robot.IntakeTransfer.setPower(-0.98);
@@ -115,24 +122,49 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             } else if (gamepad2.a) {
                 robot.leftShooter.setVelocity(1000);
                 robot.rightShooter.setVelocity(1000);
+            } else if (gamepad2.y) {
+                robot.leftShooter.setVelocity(1200);
+                robot.rightShooter.setVelocity(1200);
             }
             else if(gamepad2.right_bumper){
-                robot.leftShooter.setVelocity(+900);
-                robot.rightShooter.setVelocity(900);
+                robot.leftShooter.setVelocity(+1300);
+                robot.rightShooter.setVelocity(1300);
+            }
+            else if(gamepad2.left_bumper){
+                robot.leftShooter.setVelocity(+1376.5);
+                robot.rightShooter.setVelocity(1376.5);
+            }
+            else if(gamepad2.dpad_up){
+                robot.leftShooter.setVelocity(+1400);
+                robot.rightShooter.setVelocity(1400);
+            }
+            else if(gamepad2.left_trigger > 0.3){
+                robot.leftShooter.setVelocity(+1350);
+                robot.rightShooter.setVelocity(1350);
+            }
+            else if(gamepad2.dpad_down){
+                robot.leftShooter.setVelocity(1450);
+                robot.rightShooter.setVelocity(1450);
             }
             else {
                 robot.leftShooter.setPower(0);
                 robot.rightShooter.setPower(0);
             }
-            if(gamepad2.x){
-                isHub1 = false;
+
+            if(gamepad2.dpad_right){
+                robot.Turret.setTargetPosition(90);
+            }
+            else if(gamepad2.dpad_left){
+                robot.Turret.setTargetPosition(-90);
             }
 
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
 
-            autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+            //autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+            //robot.Turret.setTargetPosition(0);
 
         }
+
     }
 
 
