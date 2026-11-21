@@ -22,6 +22,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         robot.Map(hardwareMap);
 
         telemetry.addData("Say", "TeleOp Starting");
+
         telemetry.update();
 
         autoAim = new AutoAim(robot);
@@ -51,6 +52,8 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
             double xPos = robot.pinpoint.getPosX(DistanceUnit.INCH);
             double yPos = robot.pinpoint.getPosY(DistanceUnit.INCH);
+
+            telemetry.addData("Pos", "(" + xPos + ", " + yPos + ")");
 
             boolean speedslow = gamepad1.right_bumper;
             double mag = speedslow ? 0.5 : 1.0;

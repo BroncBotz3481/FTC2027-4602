@@ -96,7 +96,7 @@ public class Team4602HM2027 {
         pinpoint.setOffsets(-7,-4, DistanceUnit.INCH);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
-                GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
 
 
