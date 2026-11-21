@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @TeleOp
 public class TurretPID extends OpMode {
     Team4602HM2027 robot = new Team4602HM2027();
-    public double highPosition = 333;
-    public double lowPosition = 50;
+    public double highPosition = 64;
+    public double lowPosition = -64;
 
     public double curTargetPosition = highPosition;
 
@@ -19,6 +19,7 @@ public class TurretPID extends OpMode {
     double P = 0;
     double[] stepSizes = {10, 1, 0.1, 0.01, 0.001, 0.0001};
     int stepIndex = 1;
+    double maxPower = 0.4;
 
 
     @Override
@@ -27,6 +28,7 @@ public class TurretPID extends OpMode {
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, D,0);
         robot.Turret.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidfCoefficients);
         telemetry.addLine("Init Complete");
+        robot.Turret.setPower(-maxPower);
     }
 
     @Override
