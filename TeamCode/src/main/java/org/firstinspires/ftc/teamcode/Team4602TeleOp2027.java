@@ -18,13 +18,13 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     public void runOpMode() {
 
-        AutoAim autoAim;
+        AutoAimWithHardOffsets autoAimWithHardOffsets;
         robot.Map(hardwareMap);
 
         telemetry.addData("Say", "TeleOp Starting");
         telemetry.update();
 
-        autoAim = new AutoAim(robot);
+        autoAimWithHardOffsets = new AutoAimWithHardOffsets(robot);
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0, 13.923);
 

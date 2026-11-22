@@ -6,29 +6,33 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 public class TurretPID extends OpMode {
     Team4602HM2027 robot = new Team4602HM2027();
-    public double highPosition = 64;
-    public double lowPosition = -64;
+    public double highPosition = 128;
+    public double lowPosition = 0;
 
     public double curTargetPosition = highPosition;
 
     double D = 0;
     double P = 0;
-    double[] stepSizes = {10, 1, 0.1, 0.01, 0.001, 0.0001};
+
+    ElapsedTime timer = new ElapsedTime();
+
+    double lastError = 0;
+    double[] stepSizes = {1, 0.1, 0.01, 0.001, 0.0001,0.00001,0.000001};
     int stepIndex = 1;
-    double maxPower = 0.4;
-
-
     @Override
     public void init() {
         robot.Map(hardwareMap);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, D,0);
-        robot.Turret.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidfCoefficients);
         telemetry.addLine("Init Complete");
-        robot.Turret.setPower(-maxPower);
+    }
+
+    @Override
+    public void start(){
+        timer.reset();
     }
 
     @Override
@@ -56,14 +60,15 @@ public class TurretPID extends OpMode {
         if (gamepad1.dpadUpWasPressed()) {
             P += stepSizes[stepIndex];
         }
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, D, 0);
-        robot.Turret.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, pidfCoefficients);
-
-
-        robot.Turret.setTargetPosition((int) curTargetPosition);
 
         double curPosition = robot.Turret.getCurrentPosition();
         double error = curTargetPosition - curPosition;
+        double dt = timer.seconds();
+        timer.reset();
+
+        robot.Turret.setPower((P * error) + (D * ((error-lastError)/dt)));
+
+        lastError = error;
 
         telemetry.addData("Target Position", curTargetPosition);
         telemetry.addData("Current Position", "%.2f", curPosition);
@@ -72,7 +77,5 @@ public class TurretPID extends OpMode {
         telemetry.addData("Tuning P", "%.4f (Dpad U/D)",P);
         telemetry.addData("Tuning D", "%.4f (Dpad L/R)",D);
         telemetry.addData("Step Size", "%.4f (B button) ", stepSizes[stepIndex]);
-
-
     }
 }

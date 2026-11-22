@@ -1,0 +1,155 @@
+package org.firstinspires.ftc.teamcode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+public class AutoAimWithGradualOffsets {
+
+    // Add boundaries for how far the turret can go!!!!
+    Team4602HM2027 robot = new Team4602HM2027();
+    final int TICKS_PER_REV = 2000;
+    final double POD_DIAMETER = 1.8898;
+    final double POD_CIRCUMFERENCE = POD_DIAMETER * Math.PI;
+    final double maxPower = 0.4;
+    final double numTicsTurret = 383.6;
+    public final int hub1RedXPos = 58;
+    public final int hub1RedYPos = 61;
+
+    final int hub2RedXPos = 58;
+    final int hub2RedYPos = 82;
+
+    final int hub1BlueXPos = 84;
+    final int hub1BlueYPos = 61;
+
+    final int hub2BlueXPos = 84;
+    final int hub2BlueYPos = 82;
+
+    final double maxOffset = 12;
+    final double minOffset = 12;
+
+    final double maxDeltaX = 72;
+    final double maxDeltaY = 48;
+
+
+    // NEED TO CHANGE THESE NUMBERS LATER!!!
+    public final int minTurn = -100;
+    public final int maxTurn = 100;
+
+
+    public AutoAimWithGradualOffsets(Team4602HM2027 robot) {
+        this.robot = robot;
+    }
+
+    public void TurretAim(double xPos, double yPos, boolean isHub1, boolean isRed) {
+
+        int targetTicks = findTurretTicks(xPos, yPos, isHub1, isRed);
+
+        updateTurretPosition(targetTicks);
+    }
+
+    public int findTurretTicks(double posX, double posY, boolean isHub1, boolean isRed) {
+        double angleToHub = 0;
+
+        if (isRed && isHub1) {
+            if (posX > 48 && posX < 72 && posY > 0 && posY < 48) {
+                angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos - posX));
+            } else {
+                angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos + findOffset(posX, posY, isHub1, isRed) - posX));
+            }
+        } else if (isRed && !isHub1) {
+            if (posX > 0 && posX < 48 && posY > 96 && posY < 144) {
+                angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - posY, hub2RedXPos + findOffset(posX, posY, isHub1, isRed) - posX));
+            }
+                else{
+                    angleToHub = Math.toDegrees(Math.atan2(hub2RedYPos - posY, hub2RedXPos - posX));
+                }
+        } else if (!isRed && isHub1) {
+                if (posX > 0 && posX < 72 && posY > 0 && posY < 48) {
+                    angleToHub = Math.toDegrees(Math.atan2(hub1BlueYPos - posY, hub1BlueXPos + findOffset(posX, posY, isHub1, isRed) - posX));
+                }
+                else{
+                    angleToHub = Math.toDegrees(Math.atan2(hub1BlueYPos - posY, hub1BlueXPos - posX));
+                }
+        } else {
+            if (posX > 0 && posX < 72 && posY > 96 && posY < 144) {
+                angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos + findOffset(posX, posY, isHub1, isRed) - posX));
+            } else {
+                angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos - posX));
+            }
+        }
+
+        double relativeAngle = (angleToHub - getHeading()) + 90;
+
+        relativeAngle = changeAngle(relativeAngle);
+
+        if (relativeAngle > minTurn && relativeAngle < maxTurn) {
+            return (int) Math.round(angleToTicks(relativeAngle));
+        } else {
+            return robot.Turret.getCurrentPosition();
+        }
+    }
+
+    public void updateTurretPosition ( int targetTicks){
+        robot.Turret.setTargetPosition(targetTicks);
+    }
+
+    int angleToTicks ( double angle){
+        return (int) Math.round(angle * numTicsTurret / 360);
+    }
+
+    public double getHeading () {
+        return robot.pinpoint.getHeading(AngleUnit.DEGREES);
+    }
+
+            //this makes it so the angle is always between 0 - +- 180 degrees so it goes the shortest path
+    public double changeAngle ( double relativeAngle){
+        if (relativeAngle > 180) {
+            relativeAngle = relativeAngle - 360;
+        } else if (relativeAngle < -180) {
+            relativeAngle = relativeAngle + 360;
+        }
+        return relativeAngle;
+    }
+
+    public double findOffset(double posX, double posY, boolean isHub1, boolean isRed){
+        double deltaX = 0;
+        double deltaY = 0;
+
+        if(isRed && isHub1){
+            deltaY = posY;
+            if(posX > 72){
+                deltaX = 72 - posX;
+            }else{
+                deltaX = posX - 48;
+            }
+        }
+        else if(isRed && !isHub1){
+            deltaY = 144 - posY;
+            if(posX > 72){
+                deltaX = 72 - posX;
+            }else{
+                deltaX = posX - 48;
+            }
+        }
+        else if(!isRed && isHub1){
+            deltaY = posY;
+            if(posX > 96){
+                deltaX = 96 - posX;
+            }else{
+                deltaX = 72 - posX;
+            }
+        }
+        else{
+            deltaY = 144 - posY;
+            if(posX > 96){
+                deltaX = 96 - posX;
+            }else{
+                deltaX = 72 - posX;
+            }
+        }
+
+        double offset = maxOffset * (deltaX/maxDeltaX + deltaY/maxDeltaY);
+
+        return offset;
+
+    }
+}

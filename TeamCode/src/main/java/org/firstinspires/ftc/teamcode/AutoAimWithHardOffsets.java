@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-public class AutoAim {
+public class AutoAimWithHardOffsets {
 
     // Add boundaries for how far the turret can go!!!!
     Team4602HM2027 robot = new Team4602HM2027();
@@ -19,14 +15,14 @@ public class AutoAim {
     public final  int hub1RedXPos = 58;
     public final int hub1RedYPos = 61;
 
-    public final int hub2RedXPos = 58;
-    public final int hub2RedYPos = 82;
+    final int hub2RedXPos = 58;
+    final int hub2RedYPos = 82;
 
-    public final  int hub1BlueXPos = 84;
-    public final int hub1BlueYPos = 61;
+    final  int hub1BlueXPos = 84;
+    final int hub1BlueYPos = 61;
 
-    public final int hub2BlueXPos = 84;
-    public final int hub2BlueYPos = 82;
+    final int hub2BlueXPos = 84;
+    final int hub2BlueYPos = 82;
 
     final double posHubOffset = 8;
     final double negHubOffset = -8;
@@ -37,7 +33,7 @@ public class AutoAim {
     public final int maxTurn = 100;
 
 
-    public AutoAim(Team4602HM2027 robot){
+    public AutoAimWithHardOffsets(Team4602HM2027 robot){
         this.robot = robot;
     }
 
@@ -92,7 +88,7 @@ public class AutoAim {
             }
         }
 
-        double relativeAngle = (angleToHub - getHeading()) + 180;
+        double relativeAngle = (angleToHub - getHeading()) + 90;
 
         relativeAngle = changeAngle(relativeAngle);
 

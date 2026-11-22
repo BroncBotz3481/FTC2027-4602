@@ -75,10 +75,8 @@ public class Team4602HM2027 {
         DriveRightBack.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         Turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        Turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Turret.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        Turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        Turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        
         rightShooter.setDirection(DcMotorEx.Direction.REVERSE);
         rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
