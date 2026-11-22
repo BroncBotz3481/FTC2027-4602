@@ -22,6 +22,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         robot.Map(hardwareMap);
 
         telemetry.addData("Say", "TeleOp Starting");
+
         telemetry.update();
 
         autoAimWithHardOffsets = new AutoAimWithHardOffsets(robot);
