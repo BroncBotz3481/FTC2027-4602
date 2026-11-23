@@ -22,7 +22,7 @@ public class TurretPID extends OpMode {
     ElapsedTime timer = new ElapsedTime();
 
     double lastError = 0;
-    double[] stepSizes = {1, 0.1, 0.01, 0.001, 0.0001,0.00001,0.000001};
+    double[] stepSizes = {1, 0.1, 0.01, 0.001, 0.0001,0.00001,0.000001,0.0000001};
     int stepIndex = 1;
     @Override
     public void init() {
@@ -74,8 +74,8 @@ public class TurretPID extends OpMode {
         telemetry.addData("Current Position", "%.2f", curPosition);
         telemetry.addData("Error", "%.2f", error);
         telemetry.addLine("--------------------------");
-        telemetry.addData("Tuning P", "%.4f (Dpad U/D)",P);
-        telemetry.addData("Tuning D", "%.4f (Dpad L/R)",D);
-        telemetry.addData("Step Size", "%.4f (B button) ", stepSizes[stepIndex]);
+        telemetry.addData("Tuning P", "%.7f (Dpad U/D)",P);
+        telemetry.addData("Tuning D", "%.7f (Dpad L/R)",D);
+        telemetry.addData("Step Size", "%.7f (B button) ", stepSizes[stepIndex]);
     }
 }

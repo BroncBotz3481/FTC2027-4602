@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -15,6 +16,18 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
 
     Team4602HM2027 robot = new Team4602HM2027();
+
+    double turretD = 0.00098;
+
+    double turretP = 0.091;
+
+    int turretTargetPosition = 0;
+
+    double turretLastError = 0;
+
+    double turretError = 0;
+
+    ElapsedTime timer = new ElapsedTime();
 
     public void runOpMode() {
 
@@ -40,14 +53,16 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         robot.DriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
         waitForStart();
+        
+        timer.reset();
 
         boolean isHub1 = true;
 
         boolean isRed = true;
 
-        PIDFCoefficients turretPidfCoefficients = new PIDFCoefficients(11, 0, 0,0);
-        robot.Turret.setPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION, turretPidfCoefficients);
+
 
         while (opModeIsActive()) {
             //robot.Turret.setPower(0.4);
@@ -161,8 +176,12 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
 
+            turretError = robot.Turret.getTargetPosition() - turretTargetPosition;
+
             //autoAim.TurretAim(xPos,yPos,isHub1,isRed);
             //robot.Turret.setTargetPosition(0);
+
+            turretLastError = turretError;
 
         }
 
@@ -217,5 +236,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         robot.DriveRightBack.setPower(0);
         robot.DriveLeftBack.setPower(0);
 
+    }
+
+    public void setTurretPower(double error, double lastError){
+        double dt = timer.seconds();
+        robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
     }
 }
