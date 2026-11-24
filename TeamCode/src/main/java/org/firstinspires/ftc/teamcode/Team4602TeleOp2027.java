@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 
 @TeleOp (name = "Team4602TeleOp2026", group = "4602")
@@ -28,9 +30,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     double turretError = 0;
 
-    double simX = 80;
-    double simY = 24;
-    double simH = -90;
+    int turretTolerance = 1;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -68,10 +68,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         boolean isRed = true;
 
         AutoAimNoOffsets autoAim = new AutoAimNoOffsets(robot);
-
-        robot.pinpoint.setPosX(80,DistanceUnit.INCH);
-        robot.pinpoint.setPosY(24,DistanceUnit.INCH);
-        robot.pinpoint.setHeading(-90, AngleUnit.DEGREES);
 
         while (opModeIsActive()) {
             //robot.Turret.setPower(0.4);
@@ -126,13 +122,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 robot.IntakeTransfer.setPower(0);
             }
 
-           /* if (gamepad1.a) {
-                robot. IntakeTransfer.setPower(0.6);
-                robot.leftShooter.setPower(-0.45);
-                robot.rightShooter.setPower(0.45);
-                sleep(200);
-
-            }*/
             if (gamepad2.b) {
                 robot.leftShooter.setVelocity(1100);
                 robot.rightShooter.setVelocity(1100);
@@ -168,13 +157,19 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 robot.rightShooter.setPower(0);
             }
 
+            if(gamepad2.dpadDownWasPressed()){
+                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.5,8.5,AngleUnit.DEGREES ,0));
+            }
+            if(gamepad2.dpadUpWasPressed()){
+                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.5,135.5,AngleUnit.DEGREES ,180));
+            }
 
-            /*if(gamepad1.dpadUpWasPressed()){simY +=1;}
-            if(gamepad1.dpadDownWasPressed()){simY -=1;}
-            if(gamepad1.dpadLeftWasPressed()){simX -=1;}
-            if(gamepad1.dpadRightWasPressed()){simX +=1;}
-            if(gamepad1.xWasPressed()){simH+=10;}
-            if(gamepad1.yWasPressed()){simH-=10;}*/
+            if(gamepad2.xWasPressed()){
+                isHub1 = !isHub1;
+            }
+            if(gamepad2.yWasPressed()){
+                isRed = !isRed;
+            }
 
             turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
 
@@ -250,6 +245,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
     }
 
     public void setTurretPower(double error, double lastError){
+        if(error < turretTolerance){
+            robot.Turret.setPower(0);
+            return;
+        }
         double dt = timer.seconds();
         robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
     }
