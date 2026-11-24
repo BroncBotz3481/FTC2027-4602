@@ -128,9 +128,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             } else if (gamepad2.a) {
                 robot.leftShooter.setVelocity(1000);
                 robot.rightShooter.setVelocity(1000);
-            } else if (gamepad2.y) {
-                robot.leftShooter.setVelocity(1200);
-                robot.rightShooter.setVelocity(1200);
             }
             else if(gamepad2.right_bumper){
                 robot.leftShooter.setVelocity(+1300);
@@ -140,17 +137,9 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 robot.leftShooter.setVelocity(+1376.5);
                 robot.rightShooter.setVelocity(1376.5);
             }
-            else if(gamepad2.dpad_up){
-                robot.leftShooter.setVelocity(+1400);
-                robot.rightShooter.setVelocity(1400);
-            }
             else if(gamepad2.left_trigger > 0.3){
                 robot.leftShooter.setVelocity(+1350);
                 robot.rightShooter.setVelocity(1350);
-            }
-            else if(gamepad2.dpad_down){
-                robot.leftShooter.setVelocity(1450);
-                robot.rightShooter.setVelocity(1450);
             }
             else {
                 robot.leftShooter.setPower(0);
@@ -158,10 +147,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             }
 
             if(gamepad2.dpadDownWasPressed()){
-                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.5,8.5,AngleUnit.DEGREES ,0));
+                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,8.25,AngleUnit.DEGREES ,0));
             }
             if(gamepad2.dpadUpWasPressed()){
-                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.5,135.5,AngleUnit.DEGREES ,180));
+                robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,135.5,AngleUnit.DEGREES ,180));
             }
 
             if(gamepad2.xWasPressed()){
@@ -245,10 +234,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
     }
 
     public void setTurretPower(double error, double lastError){
-        if(error < turretTolerance){
+        /*if(error <= turretTolerance){
             robot.Turret.setPower(0);
             return;
-        }
+        }*/
         double dt = timer.seconds();
         robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
     }
