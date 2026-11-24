@@ -32,6 +32,8 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     int turretTolerance = 1;
 
+    int regressionVelocity = 850;
+
     ElapsedTime timer = new ElapsedTime();
 
 
@@ -40,12 +42,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
         robot.Map(hardwareMap);
 
-        telemetry.addData("Say", "TeleOp Starting");
-
         telemetry.update();
 
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0, 13.923);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(49.5, 0, 0, 13.7);
 
         robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -104,11 +104,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             robot.DriveRightFront.setPower(frontRightPower);
             robot.DriveRightBack.setPower(backRightPower);
 
-            telemetry.addData("RightFront", robot.DriveRightFront.getCurrentPosition());
-            telemetry.addData("RightBack", robot.DriveRightBack.getCurrentPosition());
-            telemetry.addData("LeftFront", robot.DriveLeftFront.getCurrentPosition());
-            telemetry.addData("LeftBack", robot.DriveLeftBack.getCurrentPosition());
-            telemetry.update();
 
 //            boolean encoderWire = true;
             if (gamepad1.right_trigger > 0.2) {
@@ -122,29 +117,22 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 robot.IntakeTransfer.setPower(0);
             }
 
-            if (gamepad2.b) {
-                robot.leftShooter.setVelocity(1100);
-                robot.rightShooter.setVelocity(1100);
-            } else if (gamepad2.a) {
-                robot.leftShooter.setVelocity(1000);
-                robot.rightShooter.setVelocity(1000);
+            if(gamepad2.dpadRightWasPressed()){
+                regressionVelocity +=10;
             }
-            else if(gamepad2.right_bumper){
-                robot.leftShooter.setVelocity(+1300);
-                robot.rightShooter.setVelocity(1300);
+            else if(gamepad2.dpadLeftWasPressed()){
+                regressionVelocity-=10;
             }
-            else if(gamepad2.left_bumper){
-                robot.leftShooter.setVelocity(+1376.5);
-                robot.rightShooter.setVelocity(1376.5);
+
+            if (gamepad2.right_trigger > 0.3) {
+                robot.leftShooter.setVelocity(regressionVelocity);
+                robot.rightShooter.setVelocity(regressionVelocity);
             }
-            else if(gamepad2.left_trigger > 0.3){
-                robot.leftShooter.setVelocity(+1350);
-                robot.rightShooter.setVelocity(1350);
+            else{
+                robot.leftShooter.setVelocity(0);
+                robot.rightShooter.setVelocity(0);
             }
-            else {
-                robot.leftShooter.setPower(0);
-                robot.rightShooter.setPower(0);
-            }
+
 
             if(gamepad2.dpadDownWasPressed()){
                 robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,8.25,AngleUnit.DEGREES ,0));
@@ -160,7 +148,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 isRed = !isRed;
             }
 
-            turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+            //turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
 
             turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
 
@@ -169,6 +157,9 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             telemetry.addData("Target Position", "%d", autoAim.TurretAim(xPos,yPos,isHub1,isRed));
 
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
+            telemetry.addData("TargetVelocity", "%d", regressionVelocity);
+            telemetry.update();
+
 
 
             //autoAim.TurretAim(xPos,yPos,isHub1,isRed);
