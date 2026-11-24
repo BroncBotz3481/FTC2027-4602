@@ -91,7 +91,7 @@ public class Team4602HM2027 {
         IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         //need to find the actual value
-        pinpoint.setOffsets(-7,-4, DistanceUnit.INCH);
+        pinpoint.setOffsets(6.060932189460814,-0.3171014785766602, DistanceUnit.INCH);
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
                 GoBildaPinpointDriver.EncoderDirection.REVERSED);

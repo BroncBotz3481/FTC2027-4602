@@ -23,23 +23,25 @@ public class AutoAimNoOffsets {
 
 
     // NEED TO CHANGE THESE NUMBERS LATER!!!
-    public final int minTurn = -100;
-    public final int maxTurn = 100;
+    public final int minTurn = -150;
+    public final int maxTurn = 150;
 
-
+    boolean sim = true;
     public AutoAimNoOffsets(Team4602HM2027 robot){
         this.robot = robot;
     }
 
-    public void TurretAim(double xPos, double yPos, boolean isHub1, boolean isRed) {
+    public int TurretAim(double xPos, double yPos, boolean isHub1, boolean isRed) {
 
         int targetTicks = findTurretTicks(xPos,yPos,isHub1,isRed);
 
-        updateTurretPosition(targetTicks);
+        return targetTicks;
     }
 
     public int findTurretTicks(double posX , double posY, boolean isHub1, boolean isRed){
         double angleToHub = 0;
+
+        posY = posY + 3;
 
         if(isRed && isHub1) {
             angleToHub = Math.toDegrees(Math.atan2(hub1RedYPos - posY, hub1RedXPos - posX));
@@ -51,22 +53,17 @@ public class AutoAimNoOffsets {
             angleToHub = Math.toDegrees(Math.atan2(hub2BlueYPos - posY, hub2BlueXPos - posX));
         }
 
-        double relativeAngle = (angleToHub - getHeading()) + 90;
+        double relativeAngle = (angleToHub - getHeading()) + 180;
 
         relativeAngle = changeAngle(relativeAngle);
 
         if(relativeAngle > minTurn && relativeAngle < maxTurn){
-            return (int) Math.round(angleToTicks(relativeAngle));
+            return angleToTicks(relativeAngle);
         }
         else{
             return robot.Turret.getCurrentPosition();
         }
     }
-
-    public void updateTurretPosition(int targetTicks) {
-        robot.Turret.setTargetPosition(targetTicks);
-    }
-
     int angleToTicks(double angle) {
         return (int) Math.round(angle * numTicsTurret / 360);
     }

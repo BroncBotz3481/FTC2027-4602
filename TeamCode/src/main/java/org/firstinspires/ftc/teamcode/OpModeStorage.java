@@ -1,3 +1,5 @@
+/*
+
 package org.firstinspires.ftc.teamcode;
 //Make sure this matches your file location
 
@@ -7,3 +9,4 @@ public class OpModeStorage {
     public static Pose autonomousEndPose = new Pose(0, 0, 0);
     // default pose to avoid null errors
 }
+*/

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
@@ -27,18 +28,22 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     double turretError = 0;
 
+    double simX = 80;
+    double simY = 24;
+    double simH = -90;
+
     ElapsedTime timer = new ElapsedTime();
+
+
 
     public void runOpMode() {
 
-        AutoAimWithHardOffsets autoAimWithHardOffsets;
         robot.Map(hardwareMap);
 
         telemetry.addData("Say", "TeleOp Starting");
 
         telemetry.update();
 
-        autoAimWithHardOffsets = new AutoAimWithHardOffsets(robot);
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(1.854, 0, 0, 13.923);
 
@@ -55,14 +60,18 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
 
         waitForStart();
-        
+
         timer.reset();
 
         boolean isHub1 = true;
 
         boolean isRed = true;
 
+        AutoAimNoOffsets autoAim = new AutoAimNoOffsets(robot);
 
+        robot.pinpoint.setPosX(80,DistanceUnit.INCH);
+        robot.pinpoint.setPosY(24,DistanceUnit.INCH);
+        robot.pinpoint.setHeading(-90, AngleUnit.DEGREES);
 
         while (opModeIsActive()) {
             //robot.Turret.setPower(0.4);
@@ -74,8 +83,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
             telemetry.addData("Pos", "(" + xPos + ", " + yPos + ")");
 
-            boolean speedslow = gamepad1.right_bumper;
-            double mag = speedslow ? 0.5 : 1.0;
 
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -95,17 +102,11 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
 
-            /*if (turretY > 0.1) {
-                robot.Turret.setPower(Math.min(turretY, 0.4));
-            }
-            else if(turretY < -0.1){
-                robot.Turret.setPower(Math.max(turretY,-0.4));
-            }*/
 
-            robot.DriveLeftFront.setPower(frontLeftPower * mag);
-            robot.DriveLeftBack.setPower(backLeftPower * mag);
-            robot.DriveRightFront.setPower(frontRightPower * mag);
-            robot.DriveRightBack.setPower(backRightPower * mag);
+            robot.DriveLeftFront.setPower(frontLeftPower);
+            robot.DriveLeftBack.setPower(backLeftPower);
+            robot.DriveRightFront.setPower(frontRightPower);
+            robot.DriveRightBack.setPower(backRightPower);
 
             telemetry.addData("RightFront", robot.DriveRightFront.getCurrentPosition());
             telemetry.addData("RightBack", robot.DriveRightBack.getCurrentPosition());
@@ -167,21 +168,31 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 robot.rightShooter.setPower(0);
             }
 
-            if(gamepad2.dpad_right){
-                robot.Turret.setTargetPosition(90);
-            }
-            else if(gamepad2.dpad_left){
-                robot.Turret.setTargetPosition(-90);
-            }
+
+            /*if(gamepad1.dpadUpWasPressed()){simY +=1;}
+            if(gamepad1.dpadDownWasPressed()){simY -=1;}
+            if(gamepad1.dpadLeftWasPressed()){simX -=1;}
+            if(gamepad1.dpadRightWasPressed()){simX +=1;}
+            if(gamepad1.xWasPressed()){simH+=10;}
+            if(gamepad1.yWasPressed()){simH-=10;}*/
+
+            turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+
+            turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
+
+            setTurretPower(turretError, turretLastError);
+
+            telemetry.addData("Target Position", "%d", autoAim.TurretAim(xPos,yPos,isHub1,isRed));
 
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
 
-            turretError = robot.Turret.getTargetPosition() - turretTargetPosition;
 
             //autoAim.TurretAim(xPos,yPos,isHub1,isRed);
             //robot.Turret.setTargetPosition(0);
 
             turretLastError = turretError;
+
+            timer.reset();
 
         }
 
