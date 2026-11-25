@@ -32,7 +32,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     int turretTolerance = 1;
 
-    int regressionVelocity = 850;
+    int regressionVelocity = 1020;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -148,7 +148,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 isRed = !isRed;
             }
 
-            //turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+            turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
 
             turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
 
