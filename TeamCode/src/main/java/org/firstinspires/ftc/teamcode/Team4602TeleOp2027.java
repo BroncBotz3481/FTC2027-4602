@@ -160,9 +160,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             telemetry.addData("TargetVelocity", "%d", regressionVelocity);
             telemetry.update();
 
-
-
-            //autoAim.TurretAim(xPos,yPos,isHub1,isRed);
             //robot.Turret.setTargetPosition(0);
 
             turretLastError = turretError;
@@ -225,11 +222,11 @@ public class Team4602TeleOp2027 extends LinearOpMode {
     }
 
     public void setTurretPower(double error, double lastError){
-        /*if(error <= turretTolerance){
+        if(error <= turretTolerance){
             robot.Turret.setPower(0);
-            return;
-        }*/
-        double dt = timer.seconds();
-        robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
+        }else{
+            double dt = timer.seconds();
+            robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
+        }
     }
 }

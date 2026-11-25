@@ -14,8 +14,6 @@ public class Servotest extends OpMode {
     public void init(){
         robot.Map(hardwareMap);
 
-
-
     }
 
 
@@ -24,19 +22,22 @@ public class Servotest extends OpMode {
     public void loop(){
 
         if(gamepad1.a){
-            robot.IntakeArm.setPosition(0);
+            robot.gate.setPosition(0);
         }
         else if(gamepad1.b){
-            robot.IntakeArm.setPosition(0.2);
+            robot.gate.setPosition(0.2);
         }
         else if(gamepad1.y){
-            robot.IntakeArm.setPosition(0.4);
+            robot.gate.setPosition(0.4);
         }
         else if(gamepad1.x){
-            robot.IntakeArm.setPosition(0.6);
+            robot.gate.setPosition(0.6);
         }
         else if(gamepad1.dpad_up){
-            robot.IntakeArm.setPosition(0.8);
+            robot.gate.setPosition(0.8);
+        }
+        else if(gamepad1.right_trigger > 0.3){
+            robot.gate.setPosition(1);
         }
 
 

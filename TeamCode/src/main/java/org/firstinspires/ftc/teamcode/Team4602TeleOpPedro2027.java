@@ -108,6 +108,7 @@ public class Team4602TeleOpPedro2027 extends OpMode {
             isRed = !isRed;
         }
 
+
         turretTargetPosition = autoAim.TurretAim(xPos, yPos, isHub1, isRed);
         turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
 

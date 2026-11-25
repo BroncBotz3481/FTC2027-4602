@@ -24,7 +24,7 @@ public class Team4602HM2027 {
     public DcMotorEx leftShooter = null;
     public AnalogInput DistanceSensor = null;
     public DcMotorEx IntakeTransfer = null;
-    public Servo IntakeArm = null;
+    public Servo gate = null;
 
     public GoBildaPinpointDriver pinpoint = null;
 
@@ -48,6 +48,7 @@ public class Team4602HM2027 {
         //DistanceSensor = hardwareMap.get(AnalogInput.class, "DistanceSensor");
         IntakeTransfer = hwMap.get(DcMotorEx.class, "IntakeTransfer");
         pinpoint = hwMap.get(GoBildaPinpointDriver.class, "pinpoint");
+        gate = hwMap.get(Servo.class, "gate");
 
         DriveLeftFront.setDirection(DcMotorEx.Direction.FORWARD);
         DriveLeftFront.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
