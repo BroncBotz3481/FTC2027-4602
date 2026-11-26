@@ -30,9 +30,11 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     double turretError = 0;
 
-    int turretTolerance = 1;
+    int turretTolerance = 2;
 
     int regressionVelocity = 1020;
+
+    boolean manualMode = true;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -45,7 +47,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         telemetry.update();
 
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(49.5, 0, 0, 13.7);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(0.4, 0, 0, 12.5);
 
         robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -86,11 +88,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
             double turretY = gamepad2.left_stick_x;
 
-            // Optional Deadzones
-//            double y = (Math.abs(gamepad1.left_stick_y) > 0.1 ? gamepad1.left_stick_y : 0); // Remember, this is reversed!
-//            double x = -(Math.abs(gamepad1.left_stick_x) > 0.1 ? gamepad1.left_stick_x : 0) * 1.1; // Counteract imperfect strafing
-//            double rx = -gamepad1.right_stick_x;
-
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1.5);
             double frontLeftPower = (y + x + rx) / denominator;
@@ -106,15 +103,18 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
 
 //            boolean encoderWire = true;
-            if (gamepad1.right_trigger > 0.2) {
+            if (gamepad2.left_trigger > 0.2) {
+                robot.gate.setPosition(0.2);
                 robot.IntakeTransfer.setPower(0.98);
-
-            }
-            else if(gamepad1.right_bumper){
-                robot.IntakeTransfer.setPower(-0.98);
-            }
-            else{
-                robot.IntakeTransfer.setPower(0);
+            } else {
+                robot.gate.setPosition(0);
+                if (gamepad1.right_trigger > 0.2) {
+                    robot.IntakeTransfer.setPower(0.98);
+                } else if (gamepad1.right_bumper) {
+                    robot.IntakeTransfer.setPower(-0.98);
+                } else {
+                    robot.IntakeTransfer.setPower(0);
+                }
             }
 
             if(gamepad2.dpadRightWasPressed()){
@@ -148,11 +148,17 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 isRed = !isRed;
             }
 
+            if(gamepad1.a){
+                manualMode = !manualMode;
+            }
+
             turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
 
             turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
 
-            setTurretPower(turretError, turretLastError);
+            if(!manualMode) {
+                setTurretPower(turretError, turretLastError);
+            }
 
             telemetry.addData("Target Position", "%d", autoAim.TurretAim(xPos,yPos,isHub1,isRed));
 
@@ -222,7 +228,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
     }
 
     public void setTurretPower(double error, double lastError){
-        if(error <= turretTolerance){
+        if(Math.abs(error) <= turretTolerance){
             robot.Turret.setPower(0);
         }else{
             double dt = timer.seconds();

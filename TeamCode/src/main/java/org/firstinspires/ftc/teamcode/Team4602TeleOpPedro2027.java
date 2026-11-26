@@ -16,6 +16,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 @TeleOp(name = "Team4602TeleOpPedro2027", group = "4602")
 public class Team4602TeleOpPedro2027 extends OpMode {
@@ -48,7 +50,11 @@ public class Team4602TeleOpPedro2027 extends OpMode {
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         // 3. Initialize AutoAim
-        autoAim = new AutoAimNoOffsets(robot);
+        //autoAim = new AutoAimNoOffsets(robot);
+
+        /*robot.pinpoint.setPosX(80,DistanceUnit.INCH);
+        robot.pinpoint.setPosY(24, DistanceUnit.INCH);
+        robot.pinpoint.setHeading(180, AngleUnit.DEGREES);*/
 
     }
     @Override
@@ -61,6 +67,10 @@ public class Team4602TeleOpPedro2027 extends OpMode {
         );
         follower.manual(powers); //disable if adding line right below
         //ManualDrive.driveOrHold(follower, powers); //Adjusts when getting pushed
+
+        robot.pinpoint.update();
+
+
         if (gamepad1.a) {
             Pose cornerPose = new Pose(10.5, 10.5, Math.toRadians(90));
             // On the fly Pose creation, we don't recommend this
@@ -78,12 +88,18 @@ public class Team4602TeleOpPedro2027 extends OpMode {
         double xPos = robotPose.x();
         double yPos = robotPose.y();// returns a Pose object
 
-        if (gamepad1.right_trigger > 0.2) {
+        if (gamepad2.left_trigger > 0.2) {
+            robot.gate.setPosition(0.2);
             robot.IntakeTransfer.setPower(0.98);
-        } else if (gamepad1.right_bumper) {
-            robot.IntakeTransfer.setPower(-0.98);
         } else {
-            robot.IntakeTransfer.setPower(0);
+            robot.gate.setPosition(0);
+            if (gamepad1.right_trigger > 0.2) {
+                robot.IntakeTransfer.setPower(0.98);
+            } else if (gamepad1.right_bumper) {
+                robot.IntakeTransfer.setPower(-0.98);
+            } else {
+                robot.IntakeTransfer.setPower(0);
+            }
         }
 
         // --- 3. SHOOTER VELOCITY & FLYWHEELS (Gamepad 2) ---

@@ -97,6 +97,8 @@ public class Team4602HM2027 {
         pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD,
                 GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
+        gate.setDirection(Servo.Direction.REVERSE);
+
 
 
 
