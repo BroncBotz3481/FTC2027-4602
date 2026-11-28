@@ -20,7 +20,7 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     Team4602HM2027 robot = new Team4602HM2027();
 
-    double turretD = 0.00098;
+    double turretD = 0.00073;
 
     double turretP = 0.091;
 
@@ -32,9 +32,14 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
     int turretTolerance = 2;
 
+    double shooterkS = 0.0865;
+
+    double shooterkV = 0.000314;
+    double shooterP = 0.00218;
+
     int regressionVelocity = 1020;
 
-    boolean manualMode = true;
+    boolean manualMode = false;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -46,11 +51,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
         telemetry.update();
 
-
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(0.4, 0, 0, 12.5);
-
-        robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.DriveRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,11 +59,15 @@ public class Team4602TeleOp2027 extends LinearOpMode {
         robot.DriveRightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.DriveLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.DriveLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.Turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.Turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         waitForStart();
 
+
         timer.reset();
+        robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,8.25,AngleUnit.DEGREES,-90));
 
         boolean isHub1 = true;
 
@@ -78,8 +82,10 @@ public class Team4602TeleOp2027 extends LinearOpMode {
 
             double xPos = robot.pinpoint.getPosX(DistanceUnit.INCH);
             double yPos = robot.pinpoint.getPosY(DistanceUnit.INCH);
+            double heading = robot.pinpoint.getHeading(AngleUnit.DEGREES);
 
-            telemetry.addData("Pos", "(" + xPos + ", " + yPos + ")");
+            telemetry.addData("Pos", "(" + xPos + ", " + yPos + "," + heading + ")");
+            telemetry.addData("Heading", "%.1f", heading);
 
 
             double y = gamepad1.left_stick_y; // Remember, this is reversed!
@@ -101,8 +107,6 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             robot.DriveRightFront.setPower(frontRightPower);
             robot.DriveRightBack.setPower(backRightPower);
 
-
-//            boolean encoderWire = true;
             if (gamepad2.left_trigger > 0.2) {
                 robot.gate.setPosition(0.2);
                 robot.IntakeTransfer.setPower(0.98);
@@ -125,12 +129,11 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             }
 
             if (gamepad2.right_trigger > 0.3) {
-                robot.leftShooter.setVelocity(regressionVelocity);
-                robot.rightShooter.setVelocity(regressionVelocity);
+                setShooterPower(regressionVelocity);
             }
             else{
-                robot.leftShooter.setVelocity(0);
-                robot.rightShooter.setVelocity(0);
+                robot.leftShooter.setPower(0);
+                robot.rightShooter.setPower(0);
             }
 
 
@@ -160,70 +163,19 @@ public class Team4602TeleOp2027 extends LinearOpMode {
                 setTurretPower(turretError, turretLastError);
             }
 
-            telemetry.addData("Target Position", "%d", autoAim.TurretAim(xPos,yPos,isHub1,isRed));
-
             telemetry.addData("Current Velocity", "%.2f", robot.leftShooter.getVelocity());
             telemetry.addData("TargetVelocity", "%d", regressionVelocity);
-            telemetry.update();
 
             //robot.Turret.setTargetPosition(0);
 
             turretLastError = turretError;
 
             timer.reset();
+            telemetry.addData("Target Position", "%d", autoAim.TurretAim(xPos,yPos,isHub1,isRed));
+            telemetry.addData("Current Position", "%d", robot.Turret.getCurrentPosition());
+            telemetry.update();
 
         }
-
-    }
-
-
-    // class specific method that aren't in constants file go here
-    public void exampleMethod(double power) {
-
-        robot.DriveLeftFront.setPower(power);
-        robot.DriveRightFront.setPower(-power);
-        robot.DriveLeftBack.setPower(-power);
-        robot.DriveRightBack.setPower(power);
-    }
-
-    public void moveLeft(double power) {
-        robot.DriveLeftFront.setPower(power);
-        robot.DriveRightFront.setPower(-power);
-        robot.DriveLeftBack.setPower(-power);
-        robot.DriveRightBack.setPower(power);
-    }
-
-    //
-    public void moveRight(double power) {
-        // Left Wheels                         //Right Wheels
-        robot.DriveLeftFront.setPower(-power);
-        robot.DriveRightFront.setPower(power);
-        robot.DriveLeftBack.setPower(power);
-        robot.DriveRightBack.setPower(-power);
-    }
-
-    public void moveForward(double power) {
-        // Left Wheels                         //Right Wheels
-        robot.DriveLeftFront.setPower(power);
-        robot.DriveRightFront.setPower(power);
-        robot.DriveLeftBack.setPower(power);
-        robot.DriveRightBack.setPower(power);
-    }
-
-    public void moveBackward(double power) {
-        // Left Wheels                         //Right Wheels
-        robot.DriveLeftFront.setPower(-power);
-        robot.DriveRightFront.setPower(-power);
-        robot.DriveLeftBack.setPower(-power);
-        robot.DriveRightBack.setPower(-power);
-    }
-
-    public void stopDriveTrainMotors() {
-        // Left Wheels                         //Right Wheels
-        robot.DriveLeftFront.setPower(0);
-        robot.DriveRightFront.setPower(0);
-        robot.DriveRightBack.setPower(0);
-        robot.DriveLeftBack.setPower(0);
 
     }
 
@@ -234,5 +186,12 @@ public class Team4602TeleOp2027 extends LinearOpMode {
             double dt = timer.seconds();
             robot.Turret.setPower((turretP * error) + (turretD * ((error-lastError)/dt)));
         }
+    }
+
+    public void setShooterPower(double goalVelocity){
+        double shooterError = goalVelocity - robot.leftShooter.getVelocity();
+        robot.leftShooter.setPower((shooterkV * goalVelocity) + (shooterP * shooterError) + shooterkS);
+        robot.rightShooter.setPower((shooterkV * goalVelocity) + (shooterP * shooterError) + shooterkS);
+
     }
 }

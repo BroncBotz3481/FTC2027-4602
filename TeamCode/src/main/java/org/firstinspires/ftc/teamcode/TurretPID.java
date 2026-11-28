@@ -27,7 +27,10 @@ public class TurretPID extends OpMode {
     @Override
     public void init() {
         robot.Map(hardwareMap);
+        robot.Turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.Turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addLine("Init Complete");
+
     }
 
     @Override

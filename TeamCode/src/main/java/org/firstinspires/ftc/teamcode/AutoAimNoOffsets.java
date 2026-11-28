@@ -23,10 +23,9 @@ public class AutoAimNoOffsets {
 
 
     // NEED TO CHANGE THESE NUMBERS LATER!!!
-    public final int minTurn = -150;
-    public final int maxTurn = 150;
+    public final int minTurn = -110;
+    public final int maxTurn = 110;
 
-    boolean sim = true;
     public AutoAimNoOffsets(Team4602HM2027 robot){
         this.robot = robot;
     }
@@ -56,6 +55,8 @@ public class AutoAimNoOffsets {
         double relativeAngle = (angleToHub - getHeading()) + 180;
 
         relativeAngle = changeAngle(relativeAngle);
+
+        //relativeAngle = -relativeAngle;
 
         if(relativeAngle > minTurn && relativeAngle < maxTurn){
             return angleToTicks(relativeAngle);

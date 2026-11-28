@@ -81,12 +81,12 @@ public class Team4602HM2027 {
         rightShooter.setDirection(DcMotorEx.Direction.REVERSE);
         rightShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         leftShooter.setDirection(DcMotorEx.Direction.FORWARD);
         leftShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         leftShooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftShooter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         IntakeTransfer.setDirection(DcMotorEx.Direction.REVERSE);
         IntakeTransfer.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
