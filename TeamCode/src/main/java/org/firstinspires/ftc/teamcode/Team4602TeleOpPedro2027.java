@@ -1,92 +1,95 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Pose;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.ManualDrive;
-
-import com.pedropathing.follower.Follower;
-import com.pedropathing.math.Pose;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.pedro.Constants;
-@TeleOp(name = "Team4602TeleOpPedro2027", group = "4602")
+@TeleOp(name = "Team4602TeleOpPedro2027")
 public class Team4602TeleOpPedro2027 extends OpMode {
+
     private Follower follower;
-    private Team4602HM2027 robot = new Team4602HM2027();
+    Team4602HM2027 robot = new Team4602HM2027();
     private AutoAimNoOffsets autoAim;
+    double turretD = 0.00098;
+    double turretP = 0.091;
+    int turretTargetPosition = 0;
+    double turretLastError = 0;
+    double turretError = 0;
+    int turretTolerance = 2;
 
-    // Turret PD & Shooter variables
-    private double turretD = 0.00098;
-    private double turretP = 0.091;
-    private int turretTargetPosition = 0;
-    private double turretLastError = 0;
-    private double turretError = 0;
-    private int turretTolerance = 1;
-    private int regressionVelocity = 1020;
+    int regressionVelocity = 1020;
 
-    // Alliance & Target state toggles
-    private boolean isHub1 = true;
-    private boolean isRed = true;
+    boolean manualMode = true;
+    boolean isHub1 = true;
+    boolean isRed = true;
 
-    private ElapsedTime timer = new ElapsedTime();
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
-        follower = Constants.create(hardwareMap);
-        // 2. Configure Shooter PIDF
         robot.Map(hardwareMap);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(49.5, 0, 0, 13.7);
+        follower = Constants.create(hardwareMap);
+
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(0.4, 0, 0, 12.5);
         robot.leftShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         robot.rightShooter.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-        // 3. Initialize AutoAim
-        //autoAim = new AutoAimNoOffsets(robot);
-
-        /*robot.pinpoint.setPosX(80,DistanceUnit.INCH);
-        robot.pinpoint.setPosY(24, DistanceUnit.INCH);
-        robot.pinpoint.setHeading(180, AngleUnit.DEGREES);*/
-
+        autoAim = new AutoAimNoOffsets(robot);
     }
+
+    @Override
+    public void start(){
+        if (OpModeStorage.autonomousEndPose != null) {
+            follower.setPose(OpModeStorage.autonomousEndPose);
+        }
+        follower.update();
+        //pinpoint.update
+        //No need for pinpoint.update because follower gets that data
+        timer.reset();
+    }
+
     @Override
     public void loop() {
         DrivePowers powers = ManualDrive.fieldCentric(
-                gamepad1.left_stick_y,
+                -gamepad1.left_stick_y,
                 gamepad1.left_stick_x,
                 gamepad1.right_stick_x,
                 follower.pose().heading()
         );
-        follower.manual(powers); //disable if adding line right below
-        //ManualDrive.driveOrHold(follower, powers); //Adjusts when getting pushed
 
-        robot.pinpoint.update();
+        follower.manual(powers);
 
-
-        if (gamepad1.a) {
-            Pose cornerPose = new Pose(10.5, 10.5, Math.toRadians(90));
-            // On the fly Pose creation, we don't recommend this
-            // for Autonomous. Only accepts radians for heading
-            follower.setPose(cornerPose); // overrides our pose
+        if(gamepad2.dpadDownWasPressed()){
+            follower.setPose(new Pose(8.375, 8.25, 0));
+            //robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,8.25, AngleUnit.DEGREES ,0));
         }
-        if (gamepad2.dpadDownWasPressed()) {
-            follower.setPose(new Pose(8.375, 8.25, Math.toRadians(0)));
+        if(gamepad2.dpadUpWasPressed()){
+            follower.setPose(new Pose(8.375,135.5,Math.toRadians(180)));
+            //robot.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH,8.375,135.5,AngleUnit.DEGREES ,180));
         }
-        if (gamepad2.dpadUpWasPressed()) {
-            follower.setPose(new Pose(8.375, 135.5, Math.toRadians(180)));
-        }//Reset position
+
+//        if (gamepad1.aWasPressed()) {
+//            Pose cornerPose = new Pose(10.5, 10.5, Math.toRadians(90));
+//            // On the fly Pose creation, we dont recommend this for Autonomous. Only accepts radians for heading
+//            follower.setPose(cornerPose); // overrides our pose
+//        } //Pick a button
+
         follower.update();
-        Pose robotPose = follower.pose();
-        double xPos = robotPose.x();
-        double yPos = robotPose.y();// returns a Pose object
+        Pose robotPose = follower.pose(); // returns a Pose object
+        double xPos = follower.pose().x();
+        double yPos = follower.pose().y();
 
         if (gamepad2.left_trigger > 0.2) {
             robot.gate.setPosition(0.2);
@@ -102,55 +105,68 @@ public class Team4602TeleOpPedro2027 extends OpMode {
             }
         }
 
-        // --- 3. SHOOTER VELOCITY & FLYWHEELS (Gamepad 2) ---
-        if (gamepad2.dpadRightWasPressed()) {
-            regressionVelocity += 10;
-        } else if (gamepad2.dpadLeftWasPressed()) {
-            regressionVelocity -= 10;
+        if(gamepad2.dpadRightWasPressed()){
+            regressionVelocity +=10;
         }
+        else if(gamepad2.dpadLeftWasPressed()){
+            regressionVelocity-=10;
+        }
+
         if (gamepad2.right_trigger > 0.3) {
             robot.leftShooter.setVelocity(regressionVelocity);
             robot.rightShooter.setVelocity(regressionVelocity);
-        } else {
+        }
+        else{
             robot.leftShooter.setVelocity(0);
             robot.rightShooter.setVelocity(0);
         }
 
-        // --- 4. TARGET & ALLIANCE TOGGLES (Gamepad 2) ---
-        if (gamepad2.xWasPressed()) {
+
+        if(gamepad2.xWasPressed()){
             isHub1 = !isHub1;
         }
-        if (gamepad2.yWasPressed()) {
+        if(gamepad2.yWasPressed()){
             isRed = !isRed;
         }
 
+        if(gamepad1.aWasPressed()){
+            manualMode = !manualMode;
+        }
 
-        turretTargetPosition = autoAim.TurretAim(xPos, yPos, isHub1, isRed);
+        turretTargetPosition = autoAim.TurretAim(xPos,yPos,isHub1,isRed);
+
         turretError = turretTargetPosition - robot.Turret.getCurrentPosition();
 
-        setTurretPower(turretError, turretLastError);
+        if(!manualMode) {
+            setTurretPower(turretError, turretLastError);
+        }
 
         turretLastError = turretError;
+
         timer.reset();
 
         telemetry.addData("Robot X", robotPose.x());
         telemetry.addData("Robot Y", robotPose.y());
         telemetry.addData("Robot Heading", Math.toDegrees(robotPose.heading()));
-        telemetry.addData("Turret Target", "%d", turretTargetPosition);
-        telemetry.addData("Shooter Current Vel", "%.2f", robot.leftShooter.getVelocity());
-        telemetry.addData("Shooter Target Vel", "%d", regressionVelocity);
+
+        // Math.toDegrees() is a built-in java method
     }
 
+    // in your autonomous
+
     @Override
-    public void start(){
-        follower.setPose(OpModeStorage.autonomousEndPose);
-        follower.update();
-        timer.reset();
+    public void stop() {
+        OpModeStorage.autonomousEndPose = follower.pose(); //saves your position in that file
     }
-    public void setTurretPower(double error, double lastError) {
-        double dt = timer.seconds();
-        if (dt > 0) {
-            robot.Turret.setPower((turretP * error) + (turretD * ((error - lastError) / dt)));
+
+    public void setTurretPower(double error, double lastError){
+        if(Math.abs(error) <= turretTolerance){
+            robot.Turret.setPower(0);
+        }else{
+            double dt = timer.seconds();
+            if (dt > 0) {
+                robot.Turret.setPower((turretP * error) + (turretD * ((error - lastError) / dt)));
+            }
         }
     }
 }
